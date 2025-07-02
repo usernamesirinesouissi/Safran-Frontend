@@ -1,0 +1,186 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <app-breadcrumb class="col-sm-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      </div>
+      <div class="content-body">
+        <!-- Basic Tables start -->
+        <div class="row">
+          <div class="col-sm-12" *blockUI="'basicTables'; message: 'Loading'">
+            <div class="card">
+              <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col-md-6">
+                    <h4 class="card-title">Liste des candidatures</h4>
+                  </div>
+                
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col-md-3 ml-2">
+                    <input type="text" class="form-control" placeholder="Recherche ...">
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-control">
+                      <option>Select Status</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-control">
+                      <option>Select Type</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100">
+                      <i class="la la-filter"></i> Filter
+                    </button>
+                  </div>
+                </div>
+                
+                
+                <div class="table-responsive card-body">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                        
+                      <th scope="col" >Candidat</th>
+                      <th scope="col">Reference Sujet</th>
+                      <th scope="col">Type Stage</th>
+                      <th scope="col">Statut</th>
+                      <th scope="col">Favori</th>
+                      <th scope="col">Score</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container *ngFor="let group of groupedCandidatures">
+                      <ng-container *ngFor="let c of group.candidatures; let i = index">
+                        <tr>
+                          <!-- Merged Candidate Column (rowspan) -->
+                          <td *ngIf="i === 0" [attr.rowspan]="group.candidatures.length">
+                            <span class="avatar avatar-sm rounded-circle mr-1">
+                              <img [src]="group.image" alt="avatar" width="30" height="30">
+                            </span>
+                            {{ group.candidat.nomCandidat }} {{ group.candidat.prenomCandidat }}
+                          </td>
+                  
+                          <!-- Candidature-specific Columns -->
+                          <td>{{ c.demande.reference }}</td>
+                          <td>{{ c.demande.typeStage.nomTypeStage }}</td>
+                          <td>
+                            <span class="status-badge"
+                                  [ngClass]="{
+                                    'status-orange': c.statutCandidature?.id === 1,
+                                    'status-green': c.statutCandidature?.id === 2,
+                                    'status-red': c.statutCandidature?.id === 3,
+                                    'status-blue': c.statutCandidature?.id === 4
+                                  }">
+                              {{ c.statutCandidature?.nom }}
+                            </span>
+                          </td>
+                          
+                          <td>
+                            <img src="assets/images/raty/star-on.png" *ngIf="c.isFavorite"
+                              class="favorite-icon" (click)="toggleFavorite(c)" alt="favori">
+                            <img src="assets/images/raty/star-off.png" *ngIf="!c.isFavorite"
+                              class="favorite-icon" (click)="toggleFavorite(c)" alt="pas favori">
+                          </td>
+                          <td>
+                            <div
+                              class="score-circle" 
+                              [ngStyle]="{ 'background-color': getScoreColor(c.score) }"
+                              [title]="c.score + '%'">
+                            </div>
+                          </td>
+                          
+                          <td *ngIf="i === 0" [attr.rowspan]="group.candidatures.length">
+                            <div class="d-flex align-items-center">
+                              <a class="text-primary mr-1"
+                                 [routerLink]="['/candidature/detailcandidature', group.candidat.id]"
+                                 [ngbTooltip]="'Aperçu détail candidature'"
+                                 triggers="hover"
+                                 [autoClose]="'outside'">
+                                <i class="la la-eye"></i>
+                              </a>
+                          
+                              <a class="text-success mr-1"
+                                 [ngbTooltip]="'Planifier un entretien'"
+                                 triggers="hover"
+                                 (click)="openEntretienModal()"
+                                 [autoClose]="'outside'">
+                                <i class="la la-calendar"></i>
+                              </a>
+                            </div>
+                          </td>
+                          
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </tbody>
+                  
+                </table>
+              </div>
+            </div>
+              <div class="text-center mb-3">
+                <nav aria-label="Page navigation">
+                  <ul
+                    class="pagination justify-content-center pagination-separate pagination-round pagination-flat">
+                    <ngb-pagination [collectionSize]="50" aria-label="Default pagination">
+                    </ngb-pagination>
+                  </ul>
+                </nav>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div *ngIf="showModal" class="modal-backdrop">
+    <div class="modal-content p-3">
+      <h5 class="modal-title">Planifier un Entretien</h5>
+  
+      <form [formGroup]="entretienForm" (ngSubmit)="submitEntretien()">
+        <pre>{{ entretienForm.invalid ? 'Form invalide' : 'Form valide' }}</pre>
+
+        <!-- Date et heure -->
+        <input type="datetime-local" formControlName="dateHeure" class="form-control mb-2" />
+  
+        <!-- Durée -->
+        <input type="number" formControlName="duree" class="form-control mb-2" placeholder="Durée en minutes" />
+  
+        <!-- Lieu -->
+        <input type="text" formControlName="lieu" class="form-control mb-2" placeholder="Lieu" />
+  
+        <!-- Choisir candidature -->
+        <label>Candidature existante</label>
+        <select formControlName="candidatureId" class="form-control mb-2">
+          <option *ngFor="let c of candidatures" [value]="c.id">
+            {{ c.demandeIntitule }} (Score: {{ c.score }})
+          </option>
+        </select>
+  
+        <!-- Toggle autres sujets -->
+        <button type="button" (click)="toggleAutresSujets()" class="btn btn-link p-0">Ou choisir un autre sujet de stage</button>
+  
+        <div *ngIf="showAutresSujets" class="mt-2">
+          <label>Autres sujets de stage</label>
+          <select formControlName="autreSujetId" class="form-control mb-2">
+            <option *ngFor="let d of autresSujets" [value]="d.id">
+              {{ d.intitule }} ({{ d.reference }})
+            </option>
+          </select>
+        </div>
+  
+        <!-- Commentaire -->
+        <textarea formControlName="commentaires" class="form-control mb-2" placeholder="Commentaires"></textarea>
+  
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-secondary me-2" type="button" (click)="closeEntretienModal()">Annuler</button>
+          <button class="btn btn-primary" type="submit" [disabled]="entretienForm.invalid">Planifier</button>
+        </div>
+      </form>
+    </div>
+  </div>

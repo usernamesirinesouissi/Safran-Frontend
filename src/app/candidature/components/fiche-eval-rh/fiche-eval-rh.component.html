@@ -1,0 +1,136 @@
+<div class="evaluation-container">
+  <!-- Header: Title and Add Competence Button -->
+  <div class="evaluation-header">
+    <h2><i class="las la-clipboard-check"></i> Évaluation Comportementale (RH)</h2>
+    <button class="add-competence-btn" (click)="openSelectCompetencesModal()">
+       Ajouter des Compétences
+    </button>
+  </div>
+
+  <!-- Controls: Score Display and Status Dropdown -->
+  <div class="evaluation-controls">
+    <div class="score-display">
+      <span class="score-label">Score Total RH:</span>
+      <span class="score-value">{{ ficheRh.scoreTotalRh | number:'1.0-2' }}</span>
+      <span class="score-max">/ 100</span>
+    </div>
+    <div class="status-dropdown-container">
+  <div class="dropdown" [class.show]="dropdownOpen">
+    <button class="dropdown-toggle status-{{getCurrentStatusClass()}}" 
+            type="button" 
+            (click)="toggleDropdown($event)">
+      {{ getCurrentStatusName() }}
+     
+    </button>
+    <div class="dropdown-menu" [class.show]="dropdownOpen">
+      <a *ngFor="let statut of statutOptions" 
+         class="dropdown-item"
+         (click)="changeStatut(statut.id); dropdownOpen = false">
+        <span class="status-indicator" [ngClass]="statut.colorClass"></span>
+        {{statut.nom}}
+      </a>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <!-- Competence Table -->
+ <div *ngIf="competencesEvaluees.length > 0" class="competence-table-wrapper table-responsive">
+        <!-- Change class from "table table-hover" to "competence-table" -->
+        <table class="competence-table">
+            <thead>
+                <tr>
+                    <th>Compétence</th>
+                    <!-- Adjust width from 45% to 40% -->
+                    <th style="width: 40%;">Niveau (0-4)</th>
+                    <!-- Adjust width from 10% to 15% -->
+                    <th style="width: 15%;" class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of competencesEvaluees; let i = index">
+                    <td>{{ item.competence?.nomCompetence }}</td>
+                    <td>
+                        <!-- Change class from "rating-container" to "rating-levels" -->
+                        <div class="rating-levels">
+                            <!-- Ensure levels go up to 4 as per desired design, and remove mouseenter/title based on getLevelValue if not needed for the new design -->
+                            <span *ngFor="let level of [0,1,2,3,4]; let idx = index"
+                                class="rating-level"
+                                [class.active]="item.scoreCompetenceRh === level"
+                                (click)="onScoreChange(item, level)"
+                                [title]="'Niveau ' + level"> <!-- Simplified title, or remove if covered by CSS visually -->
+                                {{ level }}
+                            </span>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <!-- Change button classes from "btn btn-sm btn-outline-danger" to "delete-btn" -->
+                        <button class="delete-btn" (click)="removeCompetence(i)" [disabled]="isLoading" title="Supprimer">
+                            <i class="la la-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Apply .no-competences-message class -->
+    <div *ngIf="competencesEvaluees.length === 0" class="no-competences-message">
+        Aucune compétence évaluée pour le moment. Cliquez sur "Ajouter des Compétences".
+    </div>
+
+    <!-- Apply .evaluation-actions and .save-evaluation-btn classes -->
+    <div class="evaluation-actions"> <!-- Was "mt-4 text-end" -->
+        <button class="save-evaluation-btn" (click)="saveChanges()" [disabled]="isLoading || competencesEvaluees.length === 0"> <!-- Was "btn btn-primary" -->
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <i class="la la-save" *ngIf="!isLoading"></i> Sauvegarder Évaluation RH
+        </button>
+    </div>
+
+
+
+
+
+<!-- ===================================================================== -->
+<!-- ===           Modal Template pour la Sélection des Compétences    === -->
+<!-- ===================================================================== -->
+<ng-template #selectCompModal let-activeModal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-select-competences-title">Sélectionner des Compétences Comportementales</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+    <div *ngIf="availableCompetences.length === 0 && !isLoadingModalContent" class="alert alert-info">
+      Aucune compétence disponible à la sélection ou liste en cours de chargement.
+    </div>
+    <div *ngIf="isLoadingModalContent" class="text-center my-3"> <!-- Ajout de isLoadingModalContent pour le spinner du modal -->
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement des compétences...</span>
+        </div>
+    </div>
+    <ul class="list-group" *ngIf="!isLoadingModalContent && availableCompetences.length > 0">
+      <li *ngFor="let comp of availableCompetences" class="list-group-item px-2 py-1">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            [value]="comp.id"
+            [id]="'modalCompCheck_' + comp.id"
+            [checked]="isSelected(comp)"
+            (change)="toggleSelection(comp)"
+            [disabled]="isAlreadyEvaluated(comp.id)">
+          <label class="form-check-label ms-1" [for]="'modalCompCheck_' + comp.id">
+            {{ comp.nomCompetence }}
+          </label>
+          <small *ngIf="isAlreadyEvaluated(comp.id)" class="text-muted ms-2 fst-italic">(Déjà dans la liste)</small>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss('Cancel click')">Annuler</button>
+    <button type="button" class="btn btn-primary" (click)="activeModal.close(selectedCompetencesInModal)" [disabled]="selectedCompetencesInModal.length === 0">
+      Ajouter Sélection ({{selectedCompetencesInModal.length}})
+    </button>
+  </div>
+</ng-template>

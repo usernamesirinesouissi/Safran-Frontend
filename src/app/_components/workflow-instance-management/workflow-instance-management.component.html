@@ -1,0 +1,245 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+
+<div class="workflow-instance-management-container">
+    <div class="header">
+      <h1>Gestion des instances de flux de travail</h1>
+      <div class="actions">
+        <button class="btn refresh-btn" (click)="loadWorkflowInstances()">Rafraîchir les données</button>
+    
+          <button class="btn navigate-btn" (click)="goToWorkflows()">Gestion des flux de travail</button>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Chargement des instances de flux de travail...</p>
+      </div>
+      
+      <div *ngIf="error" class="error-message">
+        <p>Échec du chargement des instances de flux de travail. Veuillez réessayer.</p>
+        <button class="btn retry-btn" (click)="loadWorkflowInstances()">Réessayer</button>
+      </div>
+      
+      <div *ngIf="!loading && !error && workflowInstances.length === 0" class="empty-state">
+        <p>Aucune instance de flux de travail trouvée.</p>
+      </div>
+      
+      <div *ngIf="!loading && !error && workflowInstances.length > 0" class="instance-list">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Flux de travail</th>
+              <th>Version</th>
+              <th>Statut</th>
+              <th>Progression</th>
+              <th>Initié par</th>
+              <th>Heure de début</th>
+              <th>Durée</th>
+             
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let instance of workflowInstances" (click)="viewInstanceDetails(instance.id)" class="instance-row">
+              <td>{{ instance.id.substring(0, 8) }}...</td>
+              <td>{{ instance.workflowDefinition.name }}</td>
+              <td>{{ instance.definitionVersion }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(instance.status)">
+                  {{ instance.status }}
+                </span>
+              </td>
+              <td>
+                <div class="progress-container">
+                  <div class="progress-bar" [style.width.%]="getCompletionPercentage(instance)"></div>
+                  <span class="progress-text">{{ getCompletionPercentage(instance) }}%</span>
+                </div>
+              </td>
+              <td>{{ instance.initiatedBy }}</td>
+              <td>{{ formatDate(instance.startedAt) }}</td>
+              <td>{{ getDurationString(instance.startedAt, instance.completedAt) }}</td>
+            
+              <td class="actions-cell">
+                <button class="btn view-btn" (click)="viewInstanceDetails(instance.id); $event.stopPropagation()">
+                  <i nz-icon nzType="eye" nzTheme="outline"></i> Détails
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="modal-overlay" *ngIf="instanceDetailsModalVisible">
+      <div class="modal large-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Détails de l'instance de flux de travail</h2>
+            <button class="close-btn" (click)="closeDetailsModal()">×</button>
+          </div>
+          <div class="modal-body" *ngIf="selectedInstance">
+            <div class="detail-section">
+              <h3>Informations générales</h3>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <div class="detail-label">ID:</div>
+                  <div class="detail-value">{{ selectedInstance.id }}</div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-label">Nom du flux:</div>
+                  <div class="detail-value">{{ selectedInstance.workflowDefinition.name }}</div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-label">Version:</div>
+                  <div class="detail-value">{{ selectedInstance.definitionVersion }}</div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-label">Statut:</div>
+                  <div class="detail-value">
+                    <span class="status-badge" [ngClass]="getStatusClass(selectedInstance.status)">
+                      {{ selectedInstance.status }}
+                    </span>
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-label">Initié par:</div>
+                  <div class="detail-value">{{ selectedInstance.initiatedBy }}</div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-label">Heure de début:</div>
+                  <div class="detail-value">{{ formatDate(selectedInstance.startedAt) }}</div>
+                </div>
+                <div class="detail-item">
+                  <div class="detail-label">Heure de fin:</div>
+                  <div class="detail-value">{{ formatDate(selectedInstance.completedAt) }}</div>
+                </div>
+              </div>
+            </div>
+            
+  
+            
+     
+  <div class="detail-section">
+      <h3>Nœuds</h3>
+      <table class="nodes-table" *ngIf="selectedInstance.nodeInstances && selectedInstance.nodeInstances.length > 0">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Statut</th>
+            <th>Heure de début</th>
+            <th>Heure de fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let nodeInstance of selectedInstance.nodeInstances">
+            <td>{{ nodeInstance.node.name }}</td>
+            <td>{{ nodeInstance.node.type }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(nodeInstance.status)">
+                {{ nodeInstance.status }}
+              </span>
+            </td>
+            <td>{{ formatDate(nodeInstance.startedAt) }}</td>
+            <td>{{ formatDate(nodeInstance.completedAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!selectedInstance.nodeInstances || selectedInstance.nodeInstances.length === 0" class="empty-message">
+        Aucun nœud trouvé
+      </div>
+    </div>
+    
+  
+  <div class="detail-section" *ngIf="hasValidationInstances()">
+      <h3>Validations</h3>
+      <table class="validations-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Nœud</th>
+            <th>Assigné à</th>
+            <th>Statut</th>
+            <th>Décision</th>
+            <th>Décidé par</th>
+            <th>Commentaires</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let nodeInstance of selectedInstance.nodeInstances">
+            <tr *ngFor="let validationInstance of nodeInstance.validationInstances">
+              <td>{{ validationInstance.validation.name }}</td>
+              <td>{{ nodeInstance.node.name }}</td>
+              <td>{{ validationInstance.assignedTo }} ({{ validationInstance.assignedRole }})</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(validationInstance.status)">
+                  {{ validationInstance.status }}
+                </span>
+              </td>
+              <td>{{ validationInstance.decision || 'En attente' }}</td>
+              <td>{{ validationInstance.decisionBy || 'N/A' }}</td>
+              <td>{{ validationInstance.comments || 'Aucun commentaire' }}</td>
+              <td>
+                <button *ngIf="validationInstance.status === 'PENDING'" 
+                        class="btn action-btn" 
+                        (click)="openValidationModal(validationInstance.id, nodeInstance.id); $event.stopPropagation()">
+                  Valider
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  
+  <div class="modal-overlay" *ngIf="validationModalVisible">
+      <div class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Traiter la validation</h2>
+            <button class="close-btn" (click)="closeValidationModal()">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="decision">Décision:</label>
+              <div class="radio-options">
+                <label>
+                  <input type="radio" name="decision" [(ngModel)]="validationDecision" value="APPROVED">
+                  Approuver
+                </label>
+                <label>
+                  <input type="radio" name="decision" [(ngModel)]="validationDecision" value="REJECTED">
+                  Rejeter
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="comments">Commentaires:</label>
+              <textarea id="comments" [(ngModel)]="validationComments" rows="4" placeholder="Entrez vos commentaires ici..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn cancel-btn" (click)="closeValidationModal()">Annuler</button>
+            <button class="btn submit-btn" (click)="submitValidationDecision()" [disabled]="!validationDecision">Soumettre</button>
+          </div>
+        </div>
+      </div>
+    </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn close-btn" (click)="closeDetailsModal()">Fermer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>

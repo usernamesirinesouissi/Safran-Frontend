@@ -1,0 +1,49 @@
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px; 
+    font-weight: 500; 
+    font-size: 13px; 
+    letter-spacing: 0.5px;
+  }
+  
+  .status-orange {
+    background-color: rgba(255, 165, 0, 0.15); 
+    color: #b37400;
+  }
+  
+  .status-blue {
+    background-color: rgba(0, 123, 255, 0.15);
+    color: #0056b3;
+  }
+  
+  .status-green {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #1e7e34;
+  }
+  
+  .status-red {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #a71d2a;
+  }
+  .badge-competence {
+    display: inline-block;
+    background-color: rgba(173, 216, 230, 0.3); /* Bleu clair */
+    color: #0077b6; /* Bleu plus foncé */
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin: 5px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.card {
+    box-shadow: none !important; /* Supprime l'ombre */
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px; /* Rapproche les cartes */
+}
+
+.card-body.border-bottom {
+    border-bottom: 1px solid #ddd !important; 
+}

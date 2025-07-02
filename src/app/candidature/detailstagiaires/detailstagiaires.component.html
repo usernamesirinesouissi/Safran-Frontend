@@ -1,0 +1,370 @@
+<!-- Main Container -->
+<div class="app-content content" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;" *ngIf="candidat">
+  <div class="content-wrapper">
+
+    <div class="content-body">
+
+      <div class="card text-white border-0 mt-5 position-relative px-4"
+           style="background: linear-gradient(135deg, #001229, #002952, #00427e);
+                  height: 160px; border-radius: 1rem; overflow: visible;">
+ <div style="position: absolute; top: 15px; left: 15px; z-index: 3;">
+      <a (click)="goBack()"
+         href="javascript:void(0);"
+         title="Retour"
+         aria-label="Retour à la page précédente"
+         style="color: white; font-size: 1.8rem; text-decoration: none; cursor: pointer;">
+        <i class="la la-arrow-left"></i> <!-- Using Line Awesome icon, adjust if you use a different icon set -->
+      </a>
+    </div>
+        <div style="width: 110px; height: 110px; background: white; border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                    position: absolute; top: -55px; left: 50%; transform: translateX(-50%); z-index: 2;">
+          <img [src]="candidatImage"
+               alt="Avatar de {{ candidat.prenomCandidat }}"
+               class="rounded-circle"
+               width="100"
+               height="100"
+               style="object-fit: cover;">
+        </div>
+
+        <div class="card-body d-flex flex-column align-items-center justify-content-end h-100 pt-2">
+          <h3 class="text-white mb-1" style="font-weight: 500; margin-top: 30px;">
+            {{ candidat.prenomCandidat }} {{ candidat.nomCandidat }}
+          </h3>
+          <p class="text-white mb-2" style="font-size: 1rem; font-weight: 300;">
+            {{ candidat.email }}
+          </p>
+          <div class="d-flex w-100 align-items-center mt-1" style="position: absolute;">
+            <!-- Left: Social Links -->
+            <div style="position: absolute; left: 15px;" class="d-flex gap-2">
+              <a [href]="candidat.githubLink || '#'" target="_blank"> <!-- [style.opacity] REMOVED -->
+                <img src="assets/images/github-logo.png" alt="GitHub" style="width: 24px; height: 24px; object-fit: contain;">
+              </a>
+               <a [href]="candidat.linkedinLink || '#'" target="_blank"> <!-- [style.opacity] REMOVED -->
+                <img src="assets/images/linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px; object-fit: contain;">
+              </a>
+              
+            </div>
+            <!-- Right: Actions for Stagiaire -->
+            <div style="position: absolute; right: 15px;" class="d-flex gap-2 align-items-center">
+       <!-- Existing CV icon -->
+<a *ngIf="candidat?.cvPath"
+   (click)="openCvModal(candidat.cvPath)"
+   href="javascript:void(0);" 
+   class="cv-download-icon"
+   title="Voir le CV"
+   aria-label="Voir le CV">
+  <i class="la la-eye"></i> <!-- Changed to eye icon for 'view' -->
+  <!-- Or keep la-download if you prefer, but 'Voir' makes more sense for modal -->
+</a>
+<span *ngIf="!candidat?.cvPath" class="text-muted" title="CV non disponible">
+    <i class="la la-file-excel-o"></i>
+</span>
+            
+          <button class="btn btn-primary btn-sm px-3"
+                        style="border-radius: 20px; margin-left: 10px;"
+                        (click)="handleEvaluationClick()"> <!-- <<== POINT D'ENTRÉE -->
+                  Evaluer 
+              </button> 
+                
+      <button class="btn btn-success btn-sm px-3"
+                        style="border-radius: 20px; margin-left: 10px;"
+                        (click)="openHistoriqueModal()">
+                  Historique 
+                </button>         </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content: Left Info, Right Calendar -->
+      <div class="row mt-4">
+
+        <!-- == LEFT COLUMN: Stagiaire Info & Progress == -->
+                <!-- == LEFT COLUMN: Stagiaire Info & Progress == -->
+        <div class="col-lg-4 col-md-5">
+          <!-- Stagiaire Details Card -->
+          <div class="card shadow-sm mb-4" style="border-radius: 1rem; border: none;">
+            <div class="card-body">
+              <h5 class="mb-3 text-primary" style="font-weight: 600;">Informations Détaillées</h5>
+              
+              <div class="table-responsive">
+                <table class="table table-borderless details-table mb-0">
+                  <tbody>
+                    <tr>
+                      <th scope="row" style="width: 120px;">Nom Complet:</th>
+                      <td>{{ candidat.prenomCandidat }} {{ candidat.nomCandidat }}</td>
+                    </tr>
+                    
+                    <tr>
+                      <th scope="row">E-mail:</th>
+                      <td>{{ candidat.email || '-' }}</td>
+                    </tr>
+
+
+                    <!-- Display "Affecté" Candidature Details -->
+                    <ng-container *ngIf="affectedCandidature">
+                      <tr><td colspan="2"><hr class="my-2"></td></tr> <!-- Separator -->
+                      <tr>
+                        <th scope="row" colspan="2" class="text-info">Stage Affecté:</th>
+                      </tr>
+                      <tr>
+                        <th scope="row">Réf.:</th>
+                        <td>{{ affectedCandidature.demandeReference || '-' }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Intitulé :</th>
+                        <td>{{ affectedCandidature.demandeIntitule || '-' }}</td>
+                      </tr>
+                    
+                    </ng-container>
+                    <!-- End of "Affecté" Candidature Details -->
+
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+            <!-- Static Internship Stages Timeline -->
+          <div class="card shadow-sm" style="border-radius: 1rem; border: none;">
+            <div class="card-body">
+              <h5 class="mb-4 text-primary" style="font-weight: 600;">Plan du Stage</h5>
+              <div class="static-stage-timeline">
+
+                <!-- Step 1: Début du Stage (Completed) -->
+                <div class="timeline-entry completed">
+                  <div class="timeline-node">
+                    <div class="node-dot"></div> <!-- Simple dot for past/completed -->
+                  </div>
+                  <div class="timeline-entry-content">
+                    <i class="timeline-entry-icon bx bx-flag"></i>
+                    <div class="timeline-entry-text">
+                      <h6>Début du Stage</h6>
+                      <p class="timeline-entry-date">{{ activeInternship?.dateDebut | date:'dd MMM yyyy' }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2: Phase de Conception (Example - Completed) -->
+                <div class="timeline-entry completed">
+                  <div class="timeline-node">
+                    <div class="node-dot"></div>
+                  </div>
+                  <div class="timeline-entry-content">
+                    <i class="timeline-entry-icon bx bx-palette"></i> <!-- Icon for Design/Conception -->
+                    <div class="timeline-entry-text">
+                      <h6>Phase de Conception</h6>
+                      <p class="timeline-entry-date">Terminée</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 3: Développement (Example - Current) -->
+                <div class="timeline-entry current">
+                  <div class="timeline-node">
+                    <!-- Icon resembling the circle with arrow from the image -->
+                    <svg class="node-current-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="10" cy="10" r="7.25" stroke="#696CFF" stroke-width="1.5"/>
+                      <path d="M9.16666 7.33331L12.3333 9.99998L9.16666 12.6666" stroke="#696CFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="timeline-entry-content">
+                    <i class="timeline-entry-icon bx bx-code-alt"></i> <!-- Icon for Development -->
+                    <div class="timeline-entry-text">
+                      <h6>Développement</h6>
+                      <p class="timeline-entry-date">En cours</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 4: Tests & Validation (Example - Future) -->
+                <div class="timeline-entry future">
+                  <div class="timeline-node">
+                     <div class="node-hollow-circle"></div> <!-- Hollow circle for future -->
+                  </div>
+                  <div class="timeline-entry-content">
+                    <i class="timeline-entry-icon bx bx-slider-alt"></i> <!-- Icon for Tests/Configuration -->
+                    <div class="timeline-entry-text">
+                      <h6>Tests et Validation</h6>
+                      <p class="timeline-entry-date">À venir</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 5: Fin du Stage (Future) -->
+                <div class="timeline-entry future">
+                  <div class="timeline-node">
+                    <div class="node-hollow-circle"></div>
+                  </div>
+                  <div class="timeline-entry-content">
+                    <i class="timeline-entry-icon bx bx-check-shield"></i> <!-- Icon for Completion/Shield -->
+                    <div class="timeline-entry-text">
+                      <h6>Fin du Stage</h6>
+                      <p class="timeline-entry-date">{{ activeInternship?.dateFin | date:'dd MMM yyyy' }}</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- End of Static Internship Stages Timeline -->
+
+        
+         
+        
+        </div> <!-- End Left Column --> 
+
+        <!-- == RIGHT COLUMN: Calendar == -->
+        <!-- ... (your existing card with candidate details) ... -->
+
+<div class="col-lg-8 col-md-7">
+  <div class="card shadow-sm" style="border-radius: 1rem; border: none; min-height: 500px;">
+    <div class="card-body">
+      <div class="calendar-container">
+        <div class="calendar-header-new">
+          <!-- ... (month-year-display, header-controls-row remain the same) ... -->
+          <div class="month-year-display-new">
+            <span class="month-text">{{ currentDisplayMonth }}</span>
+            <span class="year-text">{{ currentDisplayYear }}</span>
+          </div>
+          <div class="header-controls-row">
+            <!-- ... view switcher ... -->
+            <div class="header-group-left">
+                <button class="btn btn-primary btn-sm" (click)="saveSelectedPresences()" [disabled]="selectedDates.size === 0">
+                    <i class="la la-check"></i> Marquer Présent
+                </button>
+            </div>
+            <div class="header-group-center">
+              <button class="nav-arrow-btn" (click)="prevMonth()" aria-label="Précédent"><span class="la la-angle-left"></span></button>
+              <button class="today-btn-new" (click)="goToToday()">Aujourd'hui</button>
+              <button class="nav-arrow-btn" (click)="nextMonth()" aria-label="Suivant"><span class="la la-angle-right"></span></button>
+            </div>
+            <div class="header-group-right">
+                <div class="view-switcher-new">
+                    <button [ngClass]="{'active': currentView === 'month'}" (click)="setView('month')">Mois</button>
+                    <button [ngClass]="{'active': currentView === 'week'}" (click)="setView('week')">Semaine</button>
+                    <button [ngClass]="{'active': currentView === 'day'}" (click)="setView('day')">Jour</button>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="currentView === 'month'">
+          <div class="calendar-weekdays">
+            <div class="weekday" *ngFor="let day of weekdays">{{ day.toUpperCase() }}</div>
+          </div>
+          <div class="calendar-grid">
+            <div class="calendar-week" *ngFor="let week of weeks">
+              <div *ngFor="let dayObj of week"
+                   class="calendar-day"
+                   [class.today]="dayObj.isToday"
+                   [class.other-month]="!dayObj.isCurrentMonth"
+                   [class.present]="dayObj.isPresent && dayObj.isCurrentMonth"
+                   [class.selected]="dayObj.isSelected && dayObj.isCurrentMonth" 
+                   [class.start-streak]="dayObj.isStartOfPresenceStreak"
+                   [class.in-streak]="dayObj.isInPresenceStreak"
+                   [class.end-streak]="dayObj.isEndOfPresenceStreak"
+                   
+                   (mousedown)="onDayMouseDown(dayObj)"
+                   (mouseenter)="onDayMouseEnter(dayObj)">
+                   <!-- mouseup is handled globally -->
+                <div class="day-number-wrapper">
+                  <div class="day-number">{{ dayObj.date.getDate() }}</div>
+                </div>
+                <div class="events-container">
+                  <!-- Presence indicator (already there) -->
+
+
+  <!-- Indicator for USER SELECTION (only if not already 'present' from backend) -->
+  <div *ngIf="dayObj.isSelected && dayObj.isCurrentMonth && !dayObj.isPresent" class="selection-indicator-dot">
+  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ... (week and day views placeholders) ... -->
+      </div>
+    </div>
+  </div>
+</div><!-- End Right Column -->
+
+      </div> <!-- End main content row -->
+
+    </div> <!-- End content-body -->
+  </div> <!-- End content-wrapper -->
+</div> <!-- End app-content -->
+
+<!-- Historique Modal -->
+<div *ngIf="isHistoriqueModalOpen" class="modal-overlay" (click)="closeHistoriqueModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()"> <!-- Prevents modal close on content click -->
+    <div class="modal-header">
+      <h5 class="modal-title">Historique des Entretiens pour {{ candidat?.nomCandidat }} {{ candidat?.prenomCandidat }}</h5>
+      <!-- Use a simple times character for close or an icon -->
+      <button type="button" class="btn-close-modal" aria-label="Close" (click)="closeHistoriqueModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="entretiensForCandidat && entretiensForCandidat.length > 0; else noEntretiens">
+        <div *ngFor="let entretien of entretiensForCandidat" class="entretien-fiche card mb-3">
+          <div class="card-header">
+            Entretien du {{ entretien.dateHeure | date:'dd/MM/yyyy \'à\' HH:mm' }}
+          </div>
+          <div class="card-body">
+            <!-- <p class="card-text"><strong>ID:</strong> {{ entretien.id }}</p> -->
+            <p class="card-text"><strong>Lieu:</strong> {{ entretien.lieu }}</p>
+            <p class="card-text"><strong>Durée:</strong> {{ entretien.dureeEnMinutes }} minutes</p>
+            <p class="card-text"><strong>Commentaires:</strong></p>
+            <p class="card-text" style="white-space: pre-wrap;">{{ entretien.commentaires || 'Aucun commentaire.' }}</p>
+          </div>
+        </div>
+      </div>
+      <ng-template #noEntretiens>
+        <div class="alert alert-info" role="alert">
+          Aucun entretien n'a été enregistré pour ce stagiaire.
+        </div>
+      </ng-template>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="closeHistoriqueModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- CV Viewer Modal -->
+<div *ngIf="isCvModalOpen" class="modal-overlay" (click)="closeCvModal()">
+  <div class="modal-content cv-modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h5 class="modal-title">Visualisation du CV
+          <span *ngIf="candidat && candidat.nomCandidat"> - {{ candidat.nomCandidat }} {{ candidat.prenomCandidat }}</span>
+      </h5>
+      <button type="button" class="btn-close-modal" aria-label="Close" (click)="closeCvModal()">×</button>
+    </div>
+    <div class="modal-body cv-modal-body">
+      <div *ngIf="isLoadingCv" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Chargement du CV...</span>
+        </div>
+        <p class="mt-2">Chargement du CV...</p>
+      </div>
+
+      <div *ngIf="!isLoadingCv && cvDataUrl">
+        <!-- Use iframe to display PDF. Most modern browsers have built-in PDF viewers -->
+        <iframe [src]="cvDataUrl" type="application/pdf" width="100%" height="600px" style="border: none;">
+          <p>Votre navigateur ne supporte pas l'affichage des PDFs directement.
+             Vous pouvez <a [href]="cvDataUrl" [download]="cvFileNameForDownload || 'cv.pdf'">télécharger le CV ici</a>.
+          </p>
+        </iframe>
+      </div>
+
+      <div *ngIf="!isLoadingCv && !cvDataUrl" class="alert alert-warning text-center">
+        Le CV n'a pas pu être chargé ou n'est pas disponible.
+      </div>
+    </div>
+   
+  </div>
+</div>
+
+

@@ -1,0 +1,98 @@
+.mr-1 {
+    margin-right: 5px;
+  }
+  
+  .mrless {
+    margin-right: 3px;
+  }
+  .primary {
+    color: #007bff;
+  }
+  .editbut {
+    color: #0fa020; 
+  }
+  
+  .danger {
+    color: #dc3545; 
+  }
+  
+  .primary:hover, .danger:hover {
+    opacity: 0.8; /* Slightly fade the icons on hover */
+  }
+  .disabled-button {
+    pointer-events: none; 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px; 
+    font-weight: 500; 
+    font-size: 13px; 
+    letter-spacing: 0.5px;
+  }
+  
+  .status-orange {
+    background-color: rgba(255, 165, 0, 0.15); 
+    color: #b37400;
+  }
+  
+  .status-blue {
+    background-color: rgba(0, 123, 255, 0.15);
+    color: #0056b3;
+  }
+  
+  .status-green {
+    background-color: rgba(40, 167, 69, 0.15);
+    color: #1e7e34;
+  }
+  
+  .status-red {
+    background-color: rgba(220, 53, 69, 0.15);
+    color: #a71d2a;
+  }
+  .disabled-button {
+    pointer-events: none; /* Prevents click events */
+    opacity: 0.5; /* Makes it visually appear disabled */
+    cursor: not-allowed; /* Shows the disabled cursor */
+  }
+  .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .modal-title {
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding: 20px;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+  }
+  .row.mb-1 {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust spacing between elements */
+    flex-wrap: wrap;
+  }
+  
+  .row.mb-1 .col-md-3,
+  .row.mb-1 .col-md-2 {
+    padding: 0; /* Remove default padding */
+  }
+  
+  .row.mb-1 select,
+  .row.mb-1 input {
+    height: 38px; /* Standard form control height */
+  }
+  
+  .row.mb-1 button {
+    height: 38px;
+  }
+  

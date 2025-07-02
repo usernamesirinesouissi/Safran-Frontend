@@ -1,0 +1,349 @@
+/* Reuse the same styles as fiche-eval-rh with minor adjustments */
+.evaluation-container {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0 auto;
+  padding: 25px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.evaluation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.evaluation-header h2 {
+  color: #2b2d42;
+  font-size: 1.6rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.evaluation-header h2 i {
+  margin-right: 10px;
+  color: #3a86ff;
+}
+
+.add-exigence-btn {
+  background: #3a86ff;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.add-exigence-btn:hover {
+  background: #2775e6;
+}
+
+.add-exigence-btn i {
+  font-size: 1.1rem;
+}
+
+.evaluation-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.score-display {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.score-label {
+  font-weight: 500;
+  color: #5a6169;
+  font-size: 0.95rem;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3a86ff;
+}
+
+.score-max {
+  color: #5a6169;
+  font-size: 0.95rem;
+}
+
+/* Status Dropdown Styles */
+.status-dropdown-container {
+  position: relative;
+}
+
+.status-dropdown-container .dropdown {
+  position: relative;
+}
+
+.status-dropdown-container .dropdown-toggle {
+  background: white;
+  border: 1px solid #ced4da;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 180px;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.status-dropdown-container .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  background: white;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
+  width: 100%;
+  z-index: 1000;
+  display: none;
+  padding: 5px 0;
+}
+
+.status-dropdown-container .dropdown-menu.show {
+  display: block;
+}
+
+.status-dropdown-container .dropdown-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: #495057;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.status-dropdown-container .dropdown-item:hover {
+  background: #f8f9fa;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Exigence Table Styles */
+.exigence-table-wrapper {
+  margin-bottom: 25px;
+}
+
+.exigence-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.exigence-table th {
+  text-align: left;
+  padding: 12px 15px;
+  background: #f8f9fa;
+  color: #343a40;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.exigence-table td {
+  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+  vertical-align: middle;
+  color: #495057;
+}
+
+.rating-levels {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.rating-level {
+  padding: 6px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: #495057;
+  min-width: 30px;
+  text-align: center;
+}
+
+.rating-level:hover {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.rating-level.active {
+  background: #3a86ff;
+  color: white;
+  border-color: #3a86ff;
+  font-weight: bold;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 5px;
+  transition: color 0.2s ease;
+}
+
+.delete-btn:hover {
+  color: #c82333;
+}
+
+.delete-btn:disabled {
+  color: #adb5bd;
+  cursor: not-allowed;
+}
+
+.no-exigences-message {
+  text-align: center;
+  color: #6c757d;
+  padding: 25px;
+  border: 1px dashed #ced4da;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  background-color: #f8f9fa;
+}
+
+.evaluation-actions {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.save-evaluation-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.save-evaluation-btn:hover {
+  background: #218838;
+}
+
+.save-evaluation-btn:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+  border: 1px solid #ced4da;
+}
+
+.save-evaluation-btn i {
+  font-size: 1.1rem;
+}
+
+.save-evaluation-btn .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 5px;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* ===================================================== */
+/* == STATUS INDICATOR STYLES for TECHNICAL EVALUATION == */
+/* ===================================================== */
+/* (Base .status-indicator style should already exist from RH styles or be global) */
+
+.status-indicator.status-retenu-tech {
+  background-color: #28a745; /* Example: Green */
+}
+
+.status-indicator.status-non-retenu-tech {
+  background-color: #dc3545; /* Example: Red */
+}
+
+
+
+.status-indicator.status-revoir-rh {
+  background-color: #007bff; /* Example: Blue */
+}
+
+
+.status-indicator.status-vivier {
+  background-color: #ffc107; /* Example: Yellow/Amber */
+}
+
+.status-indicator.status-liste-rouge-rh {
+  background-color: #6f1a20; /* Example: Darker Red / Maroon */
+}
+
+
+/* ======================================================= */
+/* == DROPDOWN BUTTON STYLES for TECHNICAL EVALUATION  == */
+/* ======================================================= */
+/* (Base .status-dropdown-container .dropdown-toggle and
+    .status-dropdown-container .dropdown-toggle.status-secondary
+    styles should already exist from RH styles or be global) */
+
+.status-dropdown-container .dropdown-toggle.status-retenu-tech {
+  border-left: 6px solid #28a745; /* Green */
+  /* You can also change background-color or text color if desired */
+  /* background-color: #e9f7ef; */
+  /* color: #155724; */
+}
+
+.status-dropdown-container .dropdown-toggle.status-non-retenu-tech {
+  border-left: 6px solid #dc3545; /* Red */
+}
+
+.status-dropdown-container .dropdown-toggle.status-attente-tech {
+  border-left: 6px solid #ffc107; /* Yellow/Amber */
+}
+
+
+
+.status-dropdown-container .dropdown-toggle.status-revoir-rh {
+  border-left: 6px solid #007bff; /* Blue */
+  /* You can also change background-color or text color if desired */
+  /* background-color: #e7f3ff; */
+  /* color: #004085; */
+}
+
+.status-dropdown-container .dropdown-toggle.status-vivier {
+  border-left: 6px solid #ffc107; /* Yellow/Amber */
+}
+
+.status-dropdown-container .dropdown-toggle.status-liste-rouge-rh {
+  border-left: 6px solid #6f1a20; /* Darker Red / Maroon */
+}

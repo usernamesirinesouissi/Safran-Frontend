@@ -1,0 +1,517 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        
+      </div>
+      <div class="content-body">
+        <div class="card">
+            <div class="card-header">
+              <h4 class="card-title">Tabs with Icon</h4>
+            </div>
+            <div class="card-content">
+              <div class="card-body">
+                <p>You can also add icons to the tab name.</p>
+                <div class="nav-vertical">
+                  <div class="borderleft">
+                    <ul class="nav nav-tabs nav-left ">
+                      <div class="nav nav-tabs">
+                        <ngb-tabset>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle style="width:700px;"><i class="la la-align-justify" ></i> Home</ng-template>
+                            <ng-template ngbTabContent>
+                              <!-- menu parametrage Valeur parametre -->  
+    <div class="sidebar-left" id="sidebar-left">
+        <div class="sidebar">
+            <div class="compose-new-mail-sidebar" id="compose-sidebar" fxFlex="auto" [perfectScrollbar]="config">
+                <div class="card mb-0 shadow-none quill-wrapper p-0">
+                    <div class="card-header">
+              <h3 class="card-title" id="emailCompose">Paramétre Généreau</h3>
+              
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(0,1)">
+                  <i class="ficon feather"></i>
+                  Catégorie des tickets
+                </button>
+              
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(1,2)">
+                <i class="ficon feather"></i>
+                Statut ticket
+                </button>
+               
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(2,3)">
+                <i class="ficon feather"></i>
+                Type utilisateur
+                </button>
+               
+                <button type="button" class="btn btn-warning  btn-glow  my-2 btn-block compose-btn" id="compose-btn"
+                (click)="clicktab(3,4)">
+                <i class="ficon feather"></i>
+                Nature d'achat
+                </button>
+               
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(4,5)">
+                <i class="ficon feather"></i>
+                Priorité 
+                </button>
+
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(5,6)">
+                <i class="ficon feather"></i>
+                Devise 
+                </button>
+
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(6,8)">
+                <i class="ficon feather"></i>
+                Etat 
+                </button>
+
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(7,10)">
+                <i class="ficon feather"></i>
+                Machine 
+                </button>
+
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(8,11)">
+                <i class="ficon feather"></i>
+                Operation 
+                </button>
+
+                <button type="button" class="btn btn-warning btn-glow btn-block my-2 compose-btn" id="compose-btn"
+                (click)="clicktab(9,13)">
+                <i class="ficon feather"></i>
+                Objectif 
+                </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--/ menu parametrage Valeur parametre -->
+
+
+
+        <!-- list categorie ticket-->
+        <div class=" row" *ngIf="tabshow[0]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Catégorie ticket</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter catégorie ticket</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->      
+
+        <!-- list Statut ticket -->
+        <div class=" row" *ngIf="tabshow[1]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Statut Tickets</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter statut ticket</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+        
+        <!-- list type utilisateur -->
+        <div class=" row" *ngIf="tabshow[2]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Type utilisateur</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter Type utilisateur</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+        
+        <!-- list nature achat -->
+        <div class=" row" *ngIf="tabshow[3]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Nature achat</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter nature achat</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+
+        <!-- list Priorité -->
+        <div class=" row" *ngIf="tabshow[4]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Statut Tickets</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter catégorie des tickets</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+
+        <!-- list Devise -->
+        <div class=" row" *ngIf="tabshow[5]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Devise</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter Devise</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+
+        <!-- list etat -->
+        <div class=" row" *ngIf="tabshow[6]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Statut Tickets</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter catégorie des tickets</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+
+        <!-- list machine -->
+        <div class=" row" *ngIf="tabshow[7]">
+                    <div class=" col-md-12">
+                    <div class=" card">
+                        <div class=" card-header">
+                        <h4 class=" card-title">Statut Tickets</h4>
+                        </div>
+                        <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter catégorie des tickets</button>
+                        <div class=" card-body">
+                        <div class=" table-responsive">
+                            <table class=" table tablesorter" id="">
+                            <thead class=" text-primary">
+                                <tr>
+                                <th>Valeur</th>
+                                <th>Ordre</th>
+                                <th>Statut</th>
+                                <th></th>
+        
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of dataSource">
+                                <td>{{data.valeurParametre}}</td>
+                                <td>{{data.ordre}}</td>
+                                <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                                <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                                <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+        </div>
+        <!-- end list-->
+
+        <!-- list operation -->
+        <div class=" row" *ngIf="tabshow[8]">
+            <div class=" col-md-12">
+            <div class=" card">
+                <div class=" card-header">
+                <h4 class=" card-title">Statut Tickets</h4>
+                </div>
+                <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter catégorie des tickets</button>
+                <div class=" card-body">
+                <div class=" table-responsive">
+                    <table class=" table tablesorter" id="">
+                    <thead class=" text-primary">
+                        <tr>
+                        <th>Valeur</th>
+                        <th>Ordre</th>
+                        <th>Statut</th>
+                        <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource">
+                        <td>{{data.valeurParametre}}</td>
+                        <td>{{data.ordre}}</td>
+                        <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                        <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                        <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <!-- end list-->
+          
+        <!-- list objectif -->     
+        <div class=" row" *ngIf="tabshow[9]">
+                    <div class=" col-md-12">
+                    <div class=" card">
+                        <div class=" card-header">
+                        <h4 class=" card-title">Statut Tickets</h4>
+                        </div>
+                        <button class="btn btn-primary" style="margin-left: 150px; margin-right: 150px;" (click)="openBootstrapInputForm(BootstrapInputFormContent)">Ajouter catégorie des tickets</button>
+                        <div class=" card-body">
+                        <div class=" table-responsive">
+                            <table class=" table tablesorter" id="">
+                            <thead class=" text-primary">
+                                <tr>
+                                <th>Valeur</th>
+                                <th>Ordre</th>
+                                <th>Statut</th>
+                                <th></th>
+        
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of dataSource">
+                                <td>{{data.valeurParametre}}</td>
+                                <td>{{data.ordre}}</td>
+                                <td *ngIf="data.actif else elseBlock"><i class="ficon feather ft-check"></i></td>
+                                <ng-template #elseBlock ><td><i class="ficon feather ft-x"></i></td></ng-template>
+                                <td class="text-center"><button class="btn btn-success">Modifier</button></td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+        </div>
+        <!-- end list-->
+
+
+
+<!-- modal ajout valeur parametre -->
+        <div class="form-group">
+            <!-- Modal -->
+            <ng-template class="modal text-left" #BootstrapInputFormContent let-d="dismiss">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h3 class="modal-title text-600" id="myModalLabel34">Modal Title</h3>
+                  <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="card-body">
+                  <!-- add valeur parametre component et passage de l'id de paramG selectionné-->
+                      <add-valeur-parametre [paramG_Id]="pramGId"></add-valeur-parametre>
+                      <!-- /add valeur parametre component -->
+                </div>
+              </div>
+            </ng-template>
+        </div>
+<!--/ modal ajout valeur parametre-->
+
+
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            
+                            <ng-template ngbTabTitle><i class="la la-header"></i>Profile</ng-template>
+                            <ng-template ngbTabContent>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+                              single-origin 
+                            </ng-template>
+                          </ngb-tab>
+                          <ngb-tab>
+                            <ng-template ngbTabTitle><i class="la la-send-o"></i>About</ng-template>
+                            <ng-template ngbTabContent>
+
+                            </ng-template>
+                          </ngb-tab>
+                        </ngb-tabset>
+                      </div>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>        
+    </div>
+

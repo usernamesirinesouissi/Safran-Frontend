@@ -1,0 +1,89 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <app-breadcrumb class="col-sm-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      </div>
+      <div class="content-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Validations</h4>
+              </div>
+              <div class="card-body table-responsive">
+                <div class="mb-3">
+                  <button class="btn btn-primary mr-2" (click)="filterValidations('PENDING')">A valider</button>
+                  <button class="btn btn-success mr-2" (click)="filterValidations('APPROVED')">Approuvées</button>
+    <button class="btn btn-danger" (click)="filterValidations('REJECTED')">Refusées</button>
+                </div>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Demandeur</th>
+                      <th>Intitulé du Projet</th>
+                      <th>Description</th>
+                      <th>Durée (mois)</th>
+                      <th>Type Stage</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let validation of validations; index as i">
+                      <td>{{ i + 1 }}</td>
+                      <td>Jhon</td>
+                      <td>{{ validation.intituleProjet | slice:0:30 }}</td>
+                      <td>{{ validation.descriptionProjet | slice:0:30 }}</td>
+                      <td>{{ validation.dureeEstime }}</td>
+                      <td>{{ validation.typeStage }}</td>
+                      <td>
+
+                        <a (click)="navigateToDetails(validation.demandeId, validation.validationId)" 
+                        class="primary view mr-1 mrless"
+                        [ngbTooltip]="'Voir les détails de la demande'" triggers="hover">
+                       <i class="la la-eye"></i>
+                     </a>
+
+                        <a class="success view mr-1 mrless"
+                        [ngbTooltip]="'Valider la demande'" triggers="hover">
+                       <i class="la la-check"></i>
+                     </a>
+
+                     <a class="danger view mr-1 mrless"
+                     [ngbTooltip]="'Refuser la demande'" triggers="hover"
+                     (click)="openRefuseModal(refuseModal, validation.id)">
+                    <i class="la la-close"></i>
+                  </a>
+
+                        
+                      </td>
+                    </tr>
+                    <tr *ngIf="validations.length === 0">
+                      <td colspan="9" class="text-center">Aucune demande à afficher.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #refuseModal let-modal>
+    <div class="modal-header custom-modal-header">
+      <h4 class="modal-title">Refuser la demande</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body custom-modal-body">
+      <p class="modal-instructions">Veuillez indiquer le motif du refus :</p>
+      <textarea id="motif" class="form-control custom-textarea" [(ngModel)]="motifRefus" rows="5" placeholder="Écris ici le motif du refus..."></textarea>
+    </div>
+    <div class="modal-footer custom-modal-footer">
+      <button type="button" class="btn btn-light cancel-btn" (click)="modal.dismiss()">Annuler</button>
+      <button type="button" class="btn btn-danger confirm-btn" (click)="confirmerRefus()">Confirmer le refus</button>
+    </div>
+  </ng-template>
+  

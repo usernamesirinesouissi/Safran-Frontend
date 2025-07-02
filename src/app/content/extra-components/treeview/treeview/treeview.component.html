@@ -1,0 +1,98 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="content-header row mb-1">
+           <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+        </div>
+        <div class="content-body">
+            <!-- <section id="drag-area"> -->
+            <div class="row">
+                <div class="col-md-12">
+                    <m-card [options]="options">
+                        <ng-container mCardHeaderTitle>
+                           Basic Treeview
+                        </ng-container>
+                        <ng-container mCardBody>
+                            <div class="col-12">
+                                 <div class="form-group">
+                                    <app-treeview-select [config]="basicConfig" [items]="items"
+                                        (filterChange)="onFilterChange($event)">
+                                    </app-treeview-select>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </m-card>
+                </div>
+            </div>
+            <!-- </section> -->
+         <div class="row">
+        <div class="col-md-12">
+          <m-card [options]="options">
+            <ng-container mCardHeaderTitle>
+              Configurable Treeview
+            </ng-container>
+            <ng-container mCardBody>
+              <div class="col-12">
+                <div class="col-lg-4 col-sm-12">
+                  <div class="form-group">
+                    <label>
+                      <strong>Configuration</strong>
+                    </label>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" [(ngModel)]="config.hasAllCheckBox" >
+                      <label class="form-check-label" >hasAllCheckBox</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" [(ngModel)]="config.hasFilter" id="hasFilter">
+                      <label class="form-check-label" for="hasFilter"> hasFilter</label>
+                    </div>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" [(ngModel)]="config.hasCollapseExpand" id="hasCollapseExpand">
+                      <label class="form-check-label" for="hasCollapseExpand">hasCollapseExpand</label>
+                    </div>
+                     <div class="form-inline">
+                      <div class="form-group">
+                        <label for="maxHeight">maxHeight</label>
+                        <input type="text" class="form-control mx-sm-3" id="maxHeight" placeholder="maxHeight" [(ngModel)]="config.maxHeight">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>
+                    <strong>ngx-treeview</strong>
+                    
+                  </label>
+                   <ngx-treeview [config]="config" [items]="item" (filterChange)="onFilterChange($event)"
+                    >
+                  </ngx-treeview> 
+                </div>
+
+              </div>
+            </ng-container>
+          
+          </m-card>
+
+        </div>
+      </div>
+     <!---<section Icon>-->
+      <div class="row">
+        <div class="col-md-12">
+            <m-card>
+                <ng-container mCardHeaderTitle>
+                    Treeview with Icons
+                </ng-container>
+                <ng-container mCardBody>
+                    <div class="col-12">
+                         <div class="form-group">
+                            <app-treeview-icon [config]="basicConfig" [items]="treeIcon"
+                                (filterChange)="onFilterChange($event)">
+                            </app-treeview-icon>
+                        </div>
+                    </div>
+                </ng-container>
+            </m-card>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>

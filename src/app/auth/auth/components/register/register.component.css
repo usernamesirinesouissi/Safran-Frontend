@@ -1,0 +1,91 @@
+/* Dans votre fichier CSS (register.component.css ou styles.css) */
+.login-container {
+    background-image: url('../../../../../assets/images/backgrounds/bleu.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100vw; /* 100% de la largeur de la vue */
+    height: 100vh; /* 100% de la hauteur de la vue */
+    position: fixed; /* Fixe pour couvrir toute la page */
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    overflow: auto;
+  }
+  
+  /* Overlay semi-transparent pour améliorer la lisibilité */
+  .login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+  }
+  
+  .card {
+    border-radius: 15px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 450px; /* Largeur réduite de la carte */
+    margin: 0 auto; /* Centrage horizontal */
+  }
+  
+  /* Reste de vos styles existants */
+  .card-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  }
+  
+  .form-control-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    transition: all 0.3s;
+  }/* Conteneur du bouton - Nouvelle classe */
+.submit-btn-container {
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    margin-top: 1.5rem; /* Espacement depuis les champs */
+  }
+  
+  /* Style du bouton existant amélioré */
+  .btn-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    border: none;
+    padding: 0.75rem 2rem; /* Plus large */
+    font-size: 1.1rem;
+    border-radius: 10px;
+    transition: all 0.3s;
+    min-width: 200px; /* Largeur minimale */
+    display: inline-flex; /* Pour centrer le contenu */
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Animation pulsation */
+  @keyframes pulse {
+    0% { transform: translateY(-2px) scale(1); }
+    50% { transform: translateY(-2px) scale(1.05); }
+    100% { transform: translateY(-2px) scale(1); }
+  }
+  
+  .btn-primary:hover {
+    animation: pulse 1.5s infinite;
+  }

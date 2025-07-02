@@ -1,0 +1,361 @@
+/* stagiaires-list.component.css */
+
+:host {
+  /* CSS Variables (remain unchanged) */
+  --page-bg-color: #f8f9fc;
+  --card-bg-color: #ffffff;
+  --text-color-dark: #2d3748;
+  --text-color-medium: #718096;
+  --text-color-light: #a0aec0;
+
+  --tag-full-time-bg: #e6fffa;
+  --tag-full-time-text: #2c7a7b;
+  --tag-freelance-bg: #e6f4ff;
+  --tag-freelance-text: #2b6cb0;
+  --tag-part-time-bg: #fff5f5;
+  --tag-part-time-text: #c53030;
+  --tag-internship-bg: #fffaf0;
+  --tag-internship-text: #dd6b20;
+
+  --favorite-btn-bg: #f7fafc;
+  --favorite-btn-icon-color: #a0aec0;
+  --favorite-btn-icon-favorited-color: #e53e3e;
+
+  --skill-tag-bg: #edf2f7;
+  --skill-tag-text: #4a5568;
+
+  --view-profile-btn-bg: #ebe5ff;
+  --view-profile-btn-text: #6b46c1;
+
+  --card-border-radius: 10px;
+  --card-box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Core styles for the component's host element */
+
+  font-family: var(--font-family);
+  background-color: var(--page-bg-color); /* This makes the padding visible */
+  color: var(--text-color-medium);
+
+  /* Corrected padding: */
+  /* This applies 20px padding to top, 20px to left/right, and 0px to bottom. */
+  /* You can also write it as:
+     padding-top: 20px;
+     padding-right: 20px;
+     padding-bottom: 0;
+     padding-left: 20px;
+  */
+  padding: 20px 20px 0 20px; /* Top, Right, Bottom, Left */
+
+  /* Alternative: If the parent container (e.g., .content-body) already provides
+     sufficient padding and this component's host shouldn't add any of its own,
+     you might set all padding on :host to 0:
+     padding: 0;
+     And then apply any necessary internal padding to a child element within
+     this component's template (e.g., to .stagiaires-container).
+     However, based on the "Slightly reduced page padding" comment, the 20px
+     padding on top/sides was likely intentional for the component's content.
+  */
+}
+
+/* ... ( .stagiaires-container, .page-header, .filter-bar remain the same ) ... */
+.stagiaires-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: var(--text-color-dark);
+}
+
+.page-header .breadcrumbs {
+  font-size: 0.9em;
+  color: var(--text-color-medium);
+}
+.page-header .breadcrumbs span { margin: 0 5px; }
+.page-header .breadcrumbs span:first-child { margin-left: 0; }
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+  gap: 15px;
+  background-color: var(--card-bg-color); /* White background for the filter bar itself */
+  padding: 20px;
+  border-radius: var(--card-border-radius); /* Matches card radius */
+  box-shadow: var(--card-box-shadow); /* Matches card shadow */
+  margin-bottom: 30px;
+  align-items: center; /* Align filter items vertically */
+}
+
+.filter-bar .filter-item {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa; /* Light grey background for each input group (as per image) */
+  border: 1px solid #e2e8f0; /* Light grey border for each input group */
+  border-radius: 6px;        /* Rounded corners for each input group */
+  padding: 0 10px;           /* Horizontal padding within the input group (e.g., for icon) */
+  flex-grow: 1;              /* Allow filter items to grow */
+  min-width: 180px;          /* Minimum width for filter items */
+}
+
+.filter-bar .filter-item .icon {
+  color: var(--text-color-medium); /* Color for icons inside filter items */
+  margin-right: 8px;           /* Space between icon and input/select field */
+  font-size: 1em;              /* Adjust icon size if needed */
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Shared styles for all input fields and selects within the filter bar */
+.filter-bar .filter-item input[type="text"],
+.filter-bar .filter-item select {
+  flex-grow: 1; /* Input/select takes available space within .filter-item */
+  border: none;
+  outline: none;
+  background-color: transparent; /* Makes the input/select see-through to .filter-item's background */
+  padding: 10px 5px; /* Vertical padding defines height, horizontal for text spacing */
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.9em; /* Consistent font size for inputs/selects */
+  color: var(--text-color-dark);
+  min-width: 0; /* Important for flex children to shrink properly */
+  width: 100%; /* Take full width of its container part after icon */
+}
+
+/* Specific styles for select to remove native appearance and add custom arrow */
+.filter-bar .filter-item select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Custom arrow using SVG background image. Color is #718096 (var(--text-color-medium)) */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23718096' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Arrow 10px from right edge, vertically centered */
+  background-size: 0.8em; /* Arrow size, relative to select's font-size */
+  /* Adjust right padding to make space for the arrow:
+     10px (arrow's distance from edge) + 0.8em (arrow's width) + ~8px (gap between text and arrow) */
+  padding-right: calc(10px + 0.8em + 8px);
+}
+
+/* Placeholder text styling */
+.filter-bar .filter-item input[type="text"]::placeholder {
+  color: var(--text-color-medium);
+  opacity: 1; /* Override Firefox's lower opacity default */
+}
+
+/* Styling for select when it's showing a "placeholder" option (often the first, disabled option) */
+/* This requires the placeholder option to have an empty value, e.g., <option value="" disabled selected>Tous les rôles</option> */
+/* Or, if using :invalid pseudo-class for a required select */
+.filter-bar .filter-item select:invalid,
+.filter-bar .filter-item select option[value=""][disabled] {
+  color: var(--text-color-medium);
+}
+/* Ensure selected option (not placeholder) uses the standard text color */
+.filter-bar .filter-item select option {
+  color: var(--text-color-dark); /* Or your default text color for options */
+}
+
+
+/* Buttons in the filter bar */
+.filter-bar .btn {
+  padding: 10px 20px; /* Consistent padding for buttons */
+  border: none;
+  border-radius: 6px; /* Consistent border-radius */
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9em; /* Consistent font size */
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0; /* Prevent buttons from shrinking too much */
+}
+
+.filter-bar .btn.btn-primary { /* "Rechercher" button style from image */
+  background-color: #6875f5; /* Indigo/Blueish color from image */
+  color: white;
+}
+.filter-bar .btn.btn-primary:hover {
+  background-color: #525ee5; /* Darker shade for hover */
+}
+.filter-bar .btn.btn-primary .icon { /* Icon inside the primary button */
+    color: white; /* Make icon white if it's separate */
+    /* If using SVG as background or inline, ensure its fill is white */
+}
+
+
+.filter-bar .btn.btn-secondary { /* "Avancé" button style */
+  background-color: #6b7280; /* Dark grey from image */
+  color: white;
+}
+.filter-bar .btn.btn-secondary:hover {
+  background-color: #4b5563; /* Darker grey for hover */
+}
+
+/* Card Grid - MODIFIED for 4 cards */
+.stagiaires-grid {
+  display: grid;
+  /*
+    To fit 4 cards, the min-width needs to be smaller.
+    If container is ~1200px, and gap is 20px:
+    (1200 - (3 * 20)) / 4 = (1200 - 60) / 4 = 1140 / 4 = 285px per card.
+    Let's set min to ~230px to give it a good chance to fit 4.
+  */
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px; /* Slightly reduced gap */
+}
+
+.stagiaire-card {
+  background-color: var(--card-bg-color);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-box-shadow);
+  display: flex;
+  flex-direction: column;
+  padding: 15px; /* MODIFIED: Slightly reduced overall card padding */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stagiaire-card:hover {
+  transform: translateY(-3px); /* MODIFIED: Slightly less lift */
+  box-shadow: 0 7px 12px -3px rgba(0, 0, 0, 0.07), 0 3px 5px -2px rgba(0, 0, 0, 0.04);
+}
+
+.stagiaire-card .card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px; /* MODIFIED: Slightly reduced margin */
+}
+
+/* Contract Type Tag */
+.stagiaire-card .tag {
+  font-size: 0.65em; /* MODIFIED: Even smaller tag text */
+  padding: 3px 8px; /* MODIFIED: Tighter padding */
+  border-radius: 5px;
+  font-weight: 500;
+}
+.stagiaire-card .tag.tag-temps-plein { background-color: var(--tag-full-time-bg); color: var(--tag-full-time-text); }
+.stagiaire-card .tag.tag-temps-partiel { background-color: var(--tag-part-time-bg); color: var(--tag-part-time-text); }
+.stagiaire-card .tag.tag-stage { background-color: var(--tag-internship-bg); color: var(--tag-internship-text); }
+.stagiaire-card .tag.tag-freelance { background-color: var(--tag-freelance-bg); color: var(--tag-freelance-text); }
+.stagiaire-card .tag.tag-default { background-color: #e2e8f0; color: #4a5568; }
+
+
+/* Favorite Button (Heart Icon) */
+.stagiaire-card .favorite-btn {
+  background-color: var(--favorite-btn-bg);
+  border: 1px solid #e2e8f0;
+  color: var(--favorite-btn-icon-color);
+  width: 30px; /* MODIFIED: Slightly smaller */
+  height: 30px; /* MODIFIED: Slightly smaller */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em; /* MODIFIED: Slightly smaller icon */
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.stagiaire-card .favorite-btn:hover {
+  background-color: #edf2f7;
+}
+.stagiaire-card .favorite-btn.favorited {
+  color: var(--favorite-btn-icon-favorited-color);
+}
+
+
+/* Card Body */
+.stagiaire-card .card-body {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.stagiaire-card .profile-pic {
+  width: 70px; /* MODIFIED: Slightly smaller profile pic */
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 10px auto; /* MODIFIED: Reduced bottom margin */
+}
+
+.stagiaire-card .stagiaire-nom {
+  font-size: 1.05em; /* MODIFIED: Slightly smaller */
+  font-weight: 600;
+  margin-bottom: 3px; /* MODIFIED: Reduced margin */
+  color: var(--text-color-dark);
+}
+
+.stagiaire-card .stagiaire-role {
+  font-size: 0.8em; /* MODIFIED: Slightly smaller */
+  color: var(--text-color-medium);
+  margin-bottom: 10px; /* MODIFIED: Reduced margin */
+}
+
+.stagiaire-card .stagiaire-location-rate {
+  font-size: 0.8em; /* MODIFIED: Slightly smaller */
+  color: var(--text-color-medium);
+  margin-bottom: 12px; /* MODIFIED: Reduced margin */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px; /* MODIFIED: Reduced gap */
+}
+.stagiaire-card .stagiaire-location-rate .icon {
+  margin-right: 4px; /* MODIFIED: Reduced margin */
+  font-size: 0.85em; /* MODIFIED: Slightly smaller icons */
+}
+
+.stagiaire-card .stagiaire-competences {
+  margin-bottom: 15px; /* MODIFIED: Reduced margin before button */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px; /* MODIFIED: Reduced gap */
+}
+
+.stagiaire-card .skill-tag {
+  background-color: var(--skill-tag-bg);
+  color: var(--skill-tag-text);
+  padding: 3px 8px; /* MODIFIED: Tighter padding */
+  border-radius: 5px;
+  font-size: 0.7em; /* MODIFIED: Slightly smaller */
+}
+
+/* Card Footer and Button */
+.stagiaire-card .card-footer {
+  margin-top: auto;
+}
+
+.stagiaire-card .btn-view-profile {
+  background-color: var(--view-profile-btn-bg);
+  color: var(--view-profile-btn-text);
+  border: none;
+  padding: 9px 0; /* MODIFIED: Slightly reduced padding */
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.85em; /* MODIFIED: Slightly smaller */
+  transition: background-color 0.2s ease;
+}
+
+.stagiaire-card .btn-view-profile:hover {
+  background-color: #dcd2ff;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  font-size: 1.1em;
+  color: var(--text-color-medium);
+}

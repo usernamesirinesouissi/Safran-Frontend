@@ -1,0 +1,122 @@
+<div class="app-content content">
+    <div class="content-overlay"></div>
+    <div class="content-wrapper">
+        <div class="content-header row"></div>
+        <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+        <div class="content-body">
+            <div class="alert alert-danger" *ngIf="errorMessage">
+                {{ errorMessage }}
+            </div>
+            <div class="alert alert-success" *ngIf="successMessage">
+                {{ successMessage }}
+            </div>
+ 
+      
+
+
+          
+            <div class="col-lg-12">
+                <div class="card">
+                
+                     
+                        <ul ngbNav #customNav="ngbNav" [activeId]="selectedCard" class="nav-tabs nav-tabs-custom nav-justified">
+                            <li *ngFor="let tab of tabs" [ngbNavItem]="tab.name">
+                                <a ngbNavLink (click)="selectCard(tab.name, $event)">
+                                    <span class="d-block d-sm-none"><i class="fas fa-folder"></i></span>
+                                    <span class="d-none d-sm-block">{{ tab.displayName }}</span>
+                                </a>
+                                <ng-template ngbNavContent>
+                                    <div class="tab-pane fade show active">
+                                        <ng-template [ngTemplateOutlet]="tabContent"></ng-template>
+                                    </div>
+                                </ng-template>
+                            </li>
+                        </ul>
+                        <div [ngbNavOutlet]="customNav"></div>
+                    </div>
+                </div>
+            
+          
+                  
+            <div class="tab-content">
+                <div *ngIf="selectedCard" class="tab-pane fade show active" id="{{selectedCard}}" role="tabpanel" aria-labelledby="{{selectedCard}}-tab">
+                    <div class="row">
+                        <div class="col-12 col-md-5 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="text-center mb-4">Ajouter un {{ selectedCard }}</h4>
+                                    <form (ngSubmit)="addItem()">
+                                        <div class="form-group">
+                                            <label for="input1">Nom de {{ selectedCard }}</label>
+                                            <input id="input1" class="form-control" [(ngModel)]="newItem" name="newItem" placeholder="Entrez le nom" required />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-block">Ajouter</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-7">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h4 class="mt-4">Liste des {{ selectedCard }}</h4>
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" placeholder="Rechercher dans la liste" [(ngModel)]="searchTerm" (input)="filterItems()" />
+                                    </div>
+                                    <div *ngIf="filteredData.length === 0" class="alert alert-info">
+                                        Aucun élément trouvé.
+                                    </div>
+                                    <ul class="list-group list-group-flush mt-4" *ngIf="filteredData.length > 0">
+                                        <li *ngFor="let item of filteredData" class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span *ngIf="editingItem?.id !== item.id">
+                                                {{ item[getFieldName()] }}
+                                            </span>
+                                            <div *ngIf="editingItem?.id === item.id" class="input-group">
+                                                <input class="form-control" [(ngModel)]="editingItem[getFieldName()]" />
+                                            </div>
+
+                                            <div>
+                                                <button *ngIf="editingItem?.id !== item.id" class="btn btn-warning btn-sm mr-2" (click)="editItem(item)">
+                                                    <i class="fa fa-edit"></i> Modifier
+                                                </button>
+                                                <ng-container *ngIf="editingItem?.id === item.id">
+                                                    <button class="btn btn-success btn-sm mr-2" (click)="updateItem()">
+                                                        <i class="fa fa-save"></i> Enregistrer
+                                                    </button>
+                                                    <button class="btn btn-secondary btn-sm mr-2" (click)="cancelEdit()">
+                                                        <i class="fa fa-times"></i> Annuler
+                                                    </button>
+                                                </ng-container>
+                                                <button class="btn btn-danger btn-sm" (click)="deleteItem(item.id)">
+                                                    <i class="fa fa-trash"></i> Supprimer
+                                                </button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.nav-tabs-custom .nav-link {
+    border: none;
+    color: #6c757d;
+    padding: 10px 15px;
+}
+
+.nav-tabs-custom .nav-link.active {
+    color: #556ee6;
+    border-bottom: 2px solid #556ee6;
+    font-weight: bold;
+}
+
+.nav-tabs-custom {
+    border-bottom: 1px solid #dee2e6;
+}
+</style>

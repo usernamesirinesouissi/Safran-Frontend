@@ -1,0 +1,223 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-body">
+      
+      <!-- Container Principal Raffiné -->
+      <div class="campaign-container">
+        
+        <!-- En-tête Élégant -->
+        <div class="campaign-header">
+          <div class="header-content">
+            <div class="header-icon">
+              <!-- Utilisation d'icônes Unicode ou Font Awesome -->
+              <i class="feather ft-calendar"></i>
+            </div>
+            <div class="header-text">
+              <h2>Nouvelle Campagne de Stage</h2>
+              <p class="header-subtitle">Créez et configurez une nouvelle campagne de recrutement</p>
+            </div>
+          </div>
+           <button class="back-btn" routerLink="/campagnes/liste">
+            <i class="feather ft-arrow-left"></i>
+            <span>Retour</span>
+          </button>
+        </div>
+
+        <!-- Formulaire Raffiné -->
+        <form (ngSubmit)="onSubmit()" #campaignForm="ngForm" class="refined-form">
+          
+          <!-- Grille de Sections Compactes -->
+          <div class="sections-grid">
+            
+            <!-- Section Type de Stage -->
+            <div class="form-card type-stage">
+              <div class="card-header">
+                <div class="card-icon blue">
+                  <i class="feather ft-tag"></i>
+                </div>
+                <div class="card-title">
+                  <h4>Type de Stage</h4>
+                  <span>Catégorie du stage</span>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Type <span class="required">*</span></label>
+                <div class="select-container">
+                  <select 
+                    class="form-select"
+                    [(ngModel)]="selectedTypeStageId" 
+                    name="typeStage" 
+                    required
+                    [class.error]="campaignForm.submitted && !selectedTypeStageId"
+                  >
+                    <option value="" disabled selected hidden>Sélectionner le type...</option>
+                    <option 
+                      *ngFor="let type of typeStages" 
+                      [value]="type.id"
+                    >
+                      {{ type.nomTypeStage }}
+                    </option>
+                  </select>
+                  <i class="feather ft-chevron-down select-icon"></i>
+                </div>
+                <div class="error-message" *ngIf="campaignForm.submitted && !selectedTypeStageId">
+                  <i class="feather ft-alert-circle"></i>
+                  Type de stage requis
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Année Académique -->
+            <div class="form-card academic-year">
+              <div class="card-header">
+                <div class="card-icon green">
+                  <i class="feather ft-tag"></i>
+                </div>
+                <div class="card-title">
+                  <h4>Année Académique</h4>
+                  <span>Période scolaire</span>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Année <span class="required">*</span></label>
+                <div class="input-container">
+                  <input 
+                    type="text" 
+                    class="form-input"
+                    [(ngModel)]="campaign.academicYear" 
+                    name="academicYear" 
+                    placeholder="Ex: 2024-2025"
+                    pattern="\d{4}-\d{4}"
+                    required
+                    [class.error]="campaignForm.submitted && campaignForm.controls['academicYear']?.errors"
+                  >
+                  <i class="feather ft-calendar input-icon"></i>
+                </div>
+                <div class="error-message" *ngIf="campaignForm.submitted && campaignForm.controls['academicYear']?.errors">
+                  <i class="feather ft-alert-circle"></i>
+                  Format requis: AAAA-AAAA
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section Période - Pleine Largeur -->
+          <div class="form-card period-section full-width">
+            <div class="card-header">
+              <div class="card-icon purple">
+                <i class="feather ft-calendar"></i>
+              </div>
+              <div class="card-title">
+                <h4>Période de la Campagne</h4>
+                <span>Définissez la durée de validité de cette campagne</span>
+              </div>
+            </div>
+            
+            <div class="date-grid">
+              <div class="form-group">
+                <label class="form-label">Date de Début <span class="required">*</span></label>
+                <div class="input-container">
+                  <input 
+                    type="date" 
+                    class="form-input"
+                    [(ngModel)]="campaign.startDate" 
+                    name="startDate" 
+                    required
+                    [min]="minStartDate"
+                    [max]="maxStartDate" 
+                    (change)="validateDates()"
+                    [class.error]="campaignForm.submitted && !campaign.startDate"
+                  >
+                  <i class="feather ft-calendar input-icon"></i>
+                </div>
+                <div class="error-message" *ngIf="campaignForm.submitted && !campaign.startDate">
+                  <i class="feather ft-alert-circle"></i>
+                  Date de début requise
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Date de Fin <span class="required">*</span></label>
+                <div class="input-container">
+                  <input 
+                    type="date" 
+                    class="form-input"
+                    [(ngModel)]="campaign.endDate" 
+                    name="endDate" 
+                    required
+                    [min]="minEndDate"
+                    (change)="validateDates()"
+                    [class.error]="campaignForm.submitted && !campaign.endDate"
+                  >
+                  <i class="feather ft-calendar input-icon"></i>
+                </div>
+                <div class="error-message" *ngIf="campaignForm.submitted && !campaign.endDate">
+                  <i class="feather ft-alert-circle"></i>
+                  Date de fin requise
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Aperçu du Statut -->
+          <div class="status-card" *ngIf="campaign.startDate && campaign.endDate && !errorMessage">
+            <div class="status-item">
+              <div class="status-icon">
+                <i class="feather ft-info"></i>
+              </div>
+              <div class="status-text">
+                <span class="status-label">Statut prévu</span>
+                <span class="status-value">{{ getPreviewStatus() }}</span>
+              </div>
+            </div>
+            <div class="status-divider"></div>
+            <div class="status-item">
+              <div class="status-icon">
+                <i class="feather ft-clock"></i>
+              </div>
+              <div class="status-text">
+                <span class="status-label">Durée</span>
+                <span class="status-value">{{ calculateDuration() }} jours</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Message d'Erreur Raffiné -->
+          <div *ngIf="errorMessage" class="alert-card error">
+            <div class="alert-icon">
+              <i class="feather ft-alert-circle"></i>
+            </div>
+            <div class="alert-content">
+              <h5>Erreur de validation</h5>
+              <p>{{ errorMessage }}</p>
+            </div>
+          </div>
+
+          <!-- Actions Raffinées -->
+          <div class="form-actions">
+            <button type="button" 
+                    class="btn btn-secondary"
+                    routerLink="/campagnes/liste">
+              <div class="btn-content">
+                <i class="feather ft-x-circle"></i>
+                <span>Annuler</span>
+              </div>
+            </button>
+            
+            <button type="submit" 
+                    class="btn btn-primary"
+                    [disabled]="isSubmitting">
+              <div class="btn-content">
+                <div *ngIf="isSubmitting" class="spinner"></div>
+                <i class="feather ft-plus-circle" *ngIf="!isSubmitting"></i>
+                <span>{{ isSubmitting ? 'Création en cours...' : 'Créer la Campagne' }}</span>
+              </div>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

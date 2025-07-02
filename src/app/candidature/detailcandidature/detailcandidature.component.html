@@ -1,0 +1,221 @@
+<!-- Main Container -->
+<div class="app-content content" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <div class="content-wrapper">
+      <div class="content-body">
+  
+    <!-- Header Section -->
+    <div class="card text-white border-0 mt-5 position-relative px-4"
+    style="background: linear-gradient(135deg, #667eea, #764ba2);
+
+
+ height: 160px; border-radius: 1rem;
+           overflow: visible;">
+
+ <!-- Floating Image -->
+ <div style="width: 110px; height: 110px; background: white; border-radius: 50%;
+             display: flex; align-items: center; justify-content: center;
+             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+             position: absolute; top: -55px; left: 50%; transform: translateX(-50%); z-index: 2;">
+   <img [src]="candidatImage"
+        alt="avatar"
+        class="rounded-circle"
+        width="100"
+        height="100"
+        style="object-fit: cover;">
+ </div>
+
+ <!-- Stars Top-Right -->
+ <div style="position: absolute; top: 10px; right: 15px; font-size: 1.5rem; color: gold;">
+   ★★★★★
+ </div>
+
+<div class="card-body d-flex flex-column align-items-center justify-content-end h-100 pt-2">
+
+    <h3 class="text-white mb-1" style="font-weight: 500; margin-top: 30px;">
+      {{ candidat.prenomCandidat }} {{ candidat.nomCandidat }}
+    </h3>
+
+    <p class="text-white mb-2" style="font-size: 1rem; font-weight: 300;">
+      {{ candidat.email }}
+    </p>
+
+    <div class="d-flex w-100 align-items-center mt-1" style="position: absolute;">
+
+      <div style="position: absolute; left: 15px;" class="d-flex gap-2">
+        <a href="https://github.com/username" target="_blank">
+          <img src="assets/images/github-logo.png" alt="GitHub" style="width: 24px; height: 24px; object-fit: contain;">
+        </a>
+        <a href="https://linkedin.com/in/username" target="_blank">
+          <img src="assets/images/linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px; object-fit: contain;">
+        </a>
+      </div>
+
+      <div style="position: absolute; right: 15px;" class="d-flex gap-2">
+        <a *ngIf="candidat.cvPath"
+           [href]="getSafeCvUrl(candidat.cvPath)"
+           class="btn btn-outline-light btn-sm px-3"
+           style="border-radius: 20px;"
+           download>
+          <i class="bx bx-download"></i> Télécharger CV
+        </a>
+
+         <!-- Bouton Évaluer, maintenant avec routerLink -->
+        <!-- On prend le premier entretien de la liste s'il y en a -->
+        <a *ngIf="entretiensForCandidat && entretiensForCandidat.length > 0 && entretiensForCandidat[0].ficheEvalAssociee"
+           class="btn btn-info btn-sm px-3"
+           style="border-radius: 20px;"
+           [routerLink]="['/candidature/evaluation/entretien', entretiensForCandidat[0].id]"
+           ngbTooltip="Accéder à la fiche d'évaluation"
+           container="body">
+          <i class="la la-clipboard-check"></i> Évaluer
+        </a>
+        <span *ngIf="entretiensForCandidat && entretiensForCandidat.length > 0 && !entretiensForCandidat[0].ficheEvalAssociee"
+            class="text-white fst-italic small" ngbTooltip="La fiche d'évaluation n'est pas encore disponible. Réessayez plus tard.">
+            (Éval. en attente)
+        </span>
+
+        
+     <!-- If entretien exists, show plain text -->
+<ng-container *ngIf="entretiensForCandidat.length > 0; else showPlanifierButton">
+  <span class="text-white" style="margin-left: 10px; ">
+    Entretien déjà planifié le {{ entretiensForCandidat[0].dateHeure | date:'short' }}
+  </span>
+</ng-container>
+
+<!-- Otherwise show the Planifier button -->
+<ng-template #showPlanifierButton>
+  <button class="btn btn-success btn-sm px-3"
+          style="border-radius: 20px; margin-left: 10px;"
+          (click)="openEntretienModal()">
+    Planifier Entretien
+  </button>
+</ng-template>
+
+      </div>
+  
+    </div>
+  </div>
+  
+</div>
+
+
+
+  
+        <!-- Details Section -->
+        <div class="card  shadow-sm" style="border-radius: 1rem; border: none;">
+          <div class="card-body">
+  
+            <div class="mb-4">
+              <h4 class="mb-3 text-primary" style="font-weight: 600;">Applications</h4>
+              <div class="table-responsive ">
+                <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Sujet REF</th>
+                        <th>Intitulé</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let c of candidat.candidatures">
+                        <td>{{ c.demandeReference }}</td>
+                        <td>{{ c.demandeIntitule }}</td>
+                        <td>{{ c.dateDepot | date:'shortDate' }}</td>
+                        <td>
+                          <span class="badge badge-light-primary">{{ c.statutCandidatureLabel }}</span>
+                        </td>
+                        
+                        
+                        <td>
+                          <div
+                            class="score-circle"
+                            [ngStyle]="{ 'background-color': getScoreColor(c.score) }"
+                            [title]="c.score + '%'">
+                          </div>
+                        </td>
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <a class="text-danger mr-1"
+                               [class.disabled]="isEntretienPlanned(c.id)"
+                               [ngbTooltip]="'Refuser Candidature'"
+                               triggers="hover"
+                               [autoClose]="'outside'">
+                              <i class="la la-close"></i>
+                            </a>
+                        
+                            <a class="text-success mr-1"
+                               [class.disabled]="isEntretienPlanned(c.id)"
+                               [ngbTooltip]="'Accepter Candidature'"
+                               triggers="hover"
+                               [autoClose]="'outside'">
+                              <i class="la la-check"></i>
+                            </a>
+
+                    
+                          </div>
+                        </td>
+
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+              </div>
+            </div>
+
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  <div *ngIf="showModal" class="modal-backdrop">
+    <div class="modal-content p-3">
+      <h5 class="modal-title">Planifier un Entretien</h5>
+  
+      <form [formGroup]="entretienForm" (ngSubmit)="submitEntretien()">
+        <pre>{{ entretienForm.invalid ? 'Form invalide' : 'Form valide' }}</pre>
+
+        <!-- Date et heure -->
+        <input type="datetime-local" formControlName="dateHeure" class="form-control mb-2" />
+  
+        <!-- Durée -->
+        <input type="number" formControlName="duree" class="form-control mb-2" placeholder="Durée en minutes" />
+  
+        <!-- Lieu -->
+        <input type="text" formControlName="lieu" class="form-control mb-2" placeholder="Lieu" />
+  
+        <!-- Choisir candidature -->
+        <label>Candidature existante</label>
+        <select formControlName="candidatureId" class="form-control mb-2">
+          <option *ngFor="let c of candidatures" [value]="c.id">
+            {{ c.demandeIntitule }} (Score: {{ c.score }})
+          </option>
+        </select>
+  
+        <!-- Toggle autres sujets -->
+        <button type="button" (click)="toggleAutresSujets()" class="btn btn-link p-0">Ou choisir un autre sujet de stage</button>
+  
+        <div *ngIf="showAutresSujets" class="mt-2">
+          <label>Autres sujets de stage</label>
+          <select formControlName="autreSujetId" class="form-control mb-2">
+            <option *ngFor="let d of autresSujets" [value]="d.id">
+              {{ d.intitule }} ({{ d.reference }})
+            </option>
+          </select>
+        </div>
+  
+        <!-- Commentaire -->
+        <textarea formControlName="commentaires" class="form-control mb-2" placeholder="Commentaires"></textarea>
+  
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-secondary me-2" type="button" (click)="closeEntretienModal()">Annuler</button>
+          <button class="btn btn-primary" type="submit" [disabled]="entretienForm.invalid">Planifier</button>
+        </div>
+      </form>
+
+      
+    </div>
+  </div>

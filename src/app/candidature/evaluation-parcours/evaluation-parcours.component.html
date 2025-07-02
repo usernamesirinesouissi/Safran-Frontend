@@ -1,0 +1,277 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <!-- Enhanced Header -->
+    <div class="content-header row mb-4">
+      <div class="content-header-left col-md-8 col-12 mb-2">
+        <div class="header-content">
+          <h2 class="content-header-title">Fiche d'Évaluation de Stage</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container text-center p-5">
+      <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+      <h5 class="mt-3 mb-2">Chargement en cours...</h5>
+      <p class="text-muted">Préparation de votre grille d'évaluation</p>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="!isLoading" class="evaluation-container">
+      
+      <!-- Action Card -->
+      <div class="action-card">
+        <div class="action-card-content">
+          <div class="action-info">
+            <h3 class="action-title">
+              <i class="las la-clipboard-check"></i>
+              Gestion des Compétences
+            </h3>
+            <p class="action-subtitle">Ajoutez des compétences à évaluer pour ce stage</p>
+          </div>
+
+          <!-- Type Selector -->
+          <div class="type-selector">
+            <label>Type d'Évaluation:</label>
+            <div class="custom-dropdown" [class.open]="isDropdownOpen">
+              <button class="dropdown-toggle" type="button" 
+                      (click)="toggleDropdown()"
+                      [attr.aria-expanded]="isDropdownOpen">
+                {{ getSelectedTypeName() }}
+              </button>
+              <div class="dropdown-menu" [class.show]="isDropdownOpen">
+                <a *ngFor="let type of allTypesEvaluation; trackBy: trackByTypeId" 
+                   class="dropdown-item" 
+                   [class.active]="selectedType?.id === type.id"
+                   (click)="selectEvaluationType(type)">
+                  <span class="completion-icon" [title]="completionMap.get(type.id) + '% complété'">
+                    {{ getCompletionIcon(type.id) }}
+                  </span>
+                  {{ type.nomTypeEval }}
+                </a>
+                <div *ngIf="allTypesEvaluation.length === 0" class="dropdown-item disabled">
+                  Aucun type disponible
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <button (click)="openAddCompetenceModal()" class="btn-round btn-primary">
+            <i class="la la-plus"></i>
+            Ajouter des Compétences
+          </button>
+        </div>
+      </div>
+
+      <!-- Evaluation Card -->
+      <div class="evaluation-card">
+        <div class="evaluation-header">
+          <div class="evaluation-title-section">
+            <h2 class="evaluation-title">Grille d'Évaluation</h2>
+            <p class="evaluation-subtitle">Évaluez chaque compétence selon les niveaux définis</p>
+          </div>
+          <div class="competence-badge">
+            {{ selectedForEvaluation.length }} compétence(s)
+          </div>
+        </div>
+
+        <div class="evaluation-content">
+          <!-- Empty State -->
+          <div *ngIf="selectedForEvaluation.length === 0" class="empty-state">
+            <div class="empty-icon">📋</div>
+            <h3 class="empty-title">Aucune compétence sélectionnée</h3>
+            <p class="empty-text">
+              Commencez par ajouter des compétences à évaluer pour créer votre grille d'évaluation personnalisée.
+            </p>
+            <button (click)="openAddCompetenceModal()" class="btn-round btn-primary">
+              <i class="la la-plus"></i>
+              Ajouter des compétences
+            </button>
+          </div>
+
+          <!-- Evaluation Grid -->
+          <div *ngIf="selectedForEvaluation.length > 0">
+            <div class="table-responsive">
+              <table class="evaluation-table">
+                <thead>
+                  <tr>
+                    <th class="competence-header">Compétence</th>
+                    <th *ngFor="let level of allNiveaux" class="level-header">
+                      <div class="level-header-content">
+                        <span class="level-name">{{ level.nomNiveau }}</span>
+                        <div class="level-indicator level-{{ level.id }}"></div>
+                      </div>
+                    </th>
+                    <th class="action-header">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of selectedForEvaluation; trackBy: trackByCompetence" 
+                      class="competence-row"
+                      [class.evaluated]="item.niveauId">
+                    <!-- Competence Cell -->
+                    <td class="competence-cell">
+                      <div class="competence-info">
+                        <div class="competence-name">
+                          {{ getCompetenceName(item.competence) }}
+                        </div>
+                      </div>
+                    </td>
+                    
+                    <!-- Level Selection Cells -->
+                    <td *ngFor="let level of allNiveaux" class="level-cell">
+                      <div class="level-option">
+                        <label class="radio-label" 
+                                [attr.aria-label]="'Niveau ' + level.nomNiveau + ' pour ' + getCompetenceName(item.competence)">
+                          <input type="radio" 
+                                  [name]="'level-for-' + item.competence.id"
+                                  [value]="level.id"
+                                  [checked]="item.niveauId === level.id"
+                                  (change)="selectLevelForCompetence(item, level.id)"
+                                  class="radio-input">
+                          <span class="radio-custom level-{{ level.id }}">
+                            <span class="radio-inner"></span>
+                          </span>
+                        </label>
+                      </div>
+                    </td>
+                    
+                    <!-- Action Cell -->
+                    <td class="action-cell">
+                      <button (click)="removeCompetenceFromList(item.competence.id)" 
+                              class="btn-remove"
+                              [attr.aria-label]="'Retirer ' + getCompetenceName(item.competence)"
+                              title="Retirer cette compétence">
+                        <i class="la la-trash-o"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div *ngIf="selectedForEvaluation.length > 0" class="evaluation-footer">
+          <div class="footer-info">
+            <div class="completion-status">
+              <span class="completion-percentage">{{ getCompletionPercentage() }}% complété</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getCompletionPercentage()"></div>
+              </div>
+            </div>
+          </div>
+          <div class="footer-actions">
+            <button class="btn-round btn-success" 
+                    [disabled]="!isSaveEnabled()"
+                    (click)="saveEvaluation()">
+              <span *ngIf="isSaving" class="spinner"></span>
+              <i class="la la-save" *ngIf="!isSaving"></i>
+              {{ isSaving ? 'Sauvegarde...' : 'Sauvegarder Évaluation' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Enhanced Modal -->
+<div *ngIf="isModalOpen" class="modal-overlay" (click)="closeAddCompetenceModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title-section">
+        <h2 class="modal-title">Ajouter des Compétences</h2>
+        <p class="modal-subtitle">Sélectionnez les compétences à évaluer</p>
+      </div>
+      <button type="button" class="btn-close" (click)="closeAddCompetenceModal()">
+        <span class="icon-close"></span>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Type Selector -->
+      <div class="type-selector">
+        <div class="type-tabs">
+          <button type="button" 
+                  class="type-tab"
+                  [class.active]="!showTechCompetencies"
+                  (click)="selectCompetenceType(false)">
+            <i class="la la-users"></i>
+            Compétences RH
+          </button>
+          <button type="button" 
+                  class="type-tab"
+                  [class.active]="showTechCompetencies"
+                  (click)="selectCompetenceType(true)">
+            <i class="la la-code"></i>
+            Compétences Techniques
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-input-group">
+          <i class="search-icon la la-search"></i>
+          <input type="text" 
+                 class="search-input" 
+                 placeholder="Rechercher une compétence..."
+                 (input)="filterCompetences($event)">
+        </div>
+      </div>
+
+      <!-- Competence List -->
+      <div class="competence-list-container">
+        <!-- No Results -->
+        <div *ngIf="!availableCompetenciesInModal || availableCompetenciesInModal.length === 0" class="no-results">
+          <i class="la la-info-circle"></i>
+          <p *ngIf="!availableCompetenciesInModal">Chargement des compétences...</p>
+          <p *ngIf="availableCompetenciesInModal && availableCompetenciesInModal.length === 0">
+            Toutes les compétences {{ showTechCompetencies ? 'techniques' : 'RH' }} disponibles ont déjà été ajoutées.
+          </p>
+        </div>
+        
+        <!-- Competence List -->
+        <div *ngIf="availableCompetenciesInModal && availableCompetenciesInModal.length > 0" class="competence-list">
+          <div *ngFor="let comp of availableCompetenciesInModal; trackBy: trackByCompetenceId" class="competence-item">
+            <label class="competence-checkbox-label">
+              <input class="competence-checkbox" 
+                     type="checkbox" 
+                     [value]="comp.id" 
+                     [checked]="tempSelectedInModal?.has(comp)"
+                     (change)="toggleSelectionInModal(comp, $event)">
+              <span class="checkbox-custom">
+                <i class="icon-check la la-check"></i>
+              </span>
+              <div class="competence-details">
+                <span class="competence-name">
+                  {{ getCompetenceName(comp) }}
+                </span>
+                <span class="competence-type-badge" 
+                      [class.type-rh]="!showTechCompetencies"
+                      [class.type-tech]="showTechCompetencies">
+                  {{ showTechCompetencies ? 'TECHNIQUE' : 'RH' }}
+                </span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button type="button" 
+              class="btn-round btn-primary" 
+              (click)="addSelectedFromModal()" 
+              [disabled]="tempSelectedInModal.size === 0">
+        <i class="la la-plus"></i>
+        Ajouter la Sélection
+        <span class="selection-count" *ngIf="tempSelectedInModal.size > 0">
+          ({{ tempSelectedInModal.size }})
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

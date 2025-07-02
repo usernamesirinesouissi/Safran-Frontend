@@ -1,0 +1,94 @@
+<div class="modal-header">
+  <h4 class="modal-title">Add New Validation</h4>
+  <button type="button" class="close" aria-label="Close" (click)="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="validationForm">
+    <div class="form-group">
+      <label for="name">Validation Name</label>
+      <input type="text" class="form-control" id="name" formControlName="name" required>
+      <div *ngIf="validationForm.get('name').invalid && validationForm.get('name').touched" class="text-danger">
+        Validation name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="severity">Severity Level</label>
+      <select class="form-control" id="severity" formControlName="severity">
+        <option *ngFor="let severity of validationSeverities" [value]="severity">
+          {{ severity }}
+        </option>
+      </select>
+    </div>
+
+   <!-- Section Rôles -->
+<div class="form-group">
+  <label for="assignedRole">Rôle</label>
+  <select class="form-control" id="assignedRole" formControlName="assignedRole">
+    <option value="">Sélectionnez un rôle...</option>
+    <option *ngFor="let role of availableRoles" [value]="role.id">
+      {{ role.name }}
+    </option>
+  </select>
+  <div *ngIf="isLoadingRoles" class="mt-1">
+    <small class="text-muted">Chargement des rôles...</small>
+  </div>
+</div>
+
+<!-- Section Utilisateurs -->
+<div class="form-group">
+  <label for="assignedUser">Utilisateur</label>
+  <select class="form-control" id="assignedUser" formControlName="assignedUser"
+          [disabled]="!validationForm.get('assignedRole').value || isLoadingUsers">
+    <option value="">Sélectionnez un utilisateur...</option>
+    <option *ngFor="let user of availableUsers" [value]="user.id">
+      {{ user.name }} <span *ngIf="user.email">({{ user.email }})</span>
+    </option>
+  </select>
+  <div *ngIf="isLoadingUsers" class="mt-1">
+    <small class="text-muted">Chargement des utilisateurs...</small>
+  </div>
+  <div *ngIf="validationForm.get('assignedRole').value && !isLoadingUsers && availableUsers.length === 0"
+       class="mt-1 text-warning">
+    <small>Aucun utilisateur trouvé pour ce rôle</small>
+  </div>
+</div>
+
+    <div formGroupName="parameters" class="border p-3 mt-3">
+      <h5>Validation Parameters</h5>
+      
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" formControlName="description" rows="2"></textarea>
+      </div>
+
+      <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="required" formControlName="required">
+        <label class="form-check-label" for="required">Required Validation</label>
+      </div>
+
+      <div class="form-group">
+        <label for="timeoutMinutes">Timeout (minutes)</label>
+        <input type="number" class="form-control" id="timeoutMinutes" formControlName="timeoutMinutes">
+      </div>
+
+      <div class="form-group">
+        <label for="formTemplate">Form Template (JSON)</label>
+        <textarea class="form-control" id="formTemplate" formControlName="formTemplate" rows="3"></textarea>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+    Cancel
+  </button>
+  <button type="button" class="btn btn-primary" (click)="onSubmit()" 
+          [disabled]="validationForm.invalid">
+    Save Validation
+  </button>
+</div>

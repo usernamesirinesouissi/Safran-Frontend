@@ -1,0 +1,381 @@
+<!-- <div class="workflow-designer-container">
+    <div class="toolbar">
+      <h2>Concepteur de Flux de Travail</h2>
+
+ 
+      <div class="workflow-info">
+        <div class="form-group">
+          <label for="workflowKey">Clé du Flux de Travail :</label>
+          <input id="workflowKey" type="text" [(ngModel)]="workflowDefinition.key" placeholder="Entrez la clé du flux de travail" disabled>
+        </div>
+        <div class="form-group">
+          <label for="workflowName">Nom du Flux de Travail :</label>
+          <input id="workflowName" type="text" [(ngModel)]="workflowDefinition.name" placeholder="Entrez le nom du flux de travail">
+        </div> 
+     
+        
+        <div class="form-group">
+          <label for="stageType" class="form-label">Type de Stage :</label>
+          <select id="stageType" class="form-control" [(ngModel)]="selectedStageType">
+            <option *ngFor="let stage of availableStages" [value]="stage.id">{{ stage.nomTypeStage }}</option>
+          </select>
+     
+        
+            <button class="btn btn-primary" (click)="addStageType()">Ajouter</button>
+          </div>
+      
+        
+        <h3 class="mt-3">Types de Stages Ajoutés :</h3>
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let stage of workflowDefinition.typeStages">
+            {{ stage.nomTypeStage }}
+            <button class="btn btn-danger btn-sm" (click)="removeStageType(stage)">❌</button>
+          </li>
+        </ul>
+        
+
+        
+        <div class="form-group">
+          <label for="workflowDescription">Description :</label>
+          <input id="workflowDescription" type="text" [(ngModel)]="workflowDefinition.description" placeholder="Entrez la description du flux de travail">
+        </div>
+        <div class="button-group">
+          <button (click)="saveWorkflow()" [disabled]="saving">
+            <span *ngIf="saving">Enregistrement...</span>
+            <span *ngIf="!saving">Enregistrer</span>
+          </button>
+        
+          <button (click)="deployWorkflow()">Déployer</button>
+          <button (click)="saveAndDeployWorkflow()">Enregistrer & Déployer</button>
+          <button (click)="exportWorkflow()">Exporter</button>
+          <button (click)="goBack()">Retour aux Flux de Travail</button>
+        </div>
+      </div> -->
+      <div class="app-content content">
+        <div class="content-wrapper">
+          <div class="content-header row mb-1">
+            <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+          </div>
+
+      <div class="container-fluid p-3">
+        <div class="card shadow-lg p-3 w-75 mx-auto">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-3"> Concepteur de Flux de Travail</h2>
+      
+            <!-- Formulaire compact -->
+            <div class="row g-2 mb-2">
+              <!-- Nom du Workflow -->
+              <div class="col-md-4">
+                <label for="workflowName" class="fw-bold">📌 Nom :</label>
+                <input id="workflowName" type="text" class="form-control form-control-sm" [(ngModel)]="workflowDefinition.name" placeholder="Nom du flux">
+              </div>
+      
+              <!-- Type de Stage -->
+              <div class="col-md-4">
+                <label for="stageType" class="fw-bold">🎯 Type de Stage :</label>
+                <div class="d-flex gap-1">
+                  <select id="stageType" class="form-select form-select-sm" [(ngModel)]="selectedStageType">
+                    <option *ngFor="let stage of availableStages" [value]="stage.id">{{ stage.nomTypeStage }}</option>
+                  </select>
+                  <button class="btn btn-sm btn-success" (click)="addStageType()">➕</button>
+                </div>
+              </div>
+      
+              <!-- Description -->
+              <div class="col-md-4">
+                <label for="workflowDescription" class="fw-bold">📝 Description :</label>
+                <input id="workflowDescription" type="text" class="form-control form-control-sm" [(ngModel)]="workflowDefinition.description" placeholder="Description">
+              </div>
+            </div>
+      
+            <!-- Liste des Types de Stages sous forme de Badges -->
+            <div class="mb-2">
+              <h6 class="text-center fw-bold">📋 Types de Stages Ajoutés :</h6>
+              <div class="d-flex flex-wrap gap-1 justify-content-center">
+                <span *ngFor="let stage of workflowDefinition.typeStages" class="badge bg-primary d-flex align-items-center gap-1 p-1">
+                  {{ stage.nomTypeStage }}
+                  <button class="btn btn-sm btn-outline-light p-0" style="line-height: 1;" (click)="removeStageType(stage)">
+                    ❌
+                  </button>
+                </span>
+              </div>
+            </div>
+      
+            <!-- Boutons d'action -->
+            <div class="d-flex justify-content-center flex-wrap gap-1 mt-2">
+              <button class="btn btn-primary btn-sm" (click)="saveWorkflow()" [disabled]="saving">
+                <i class="bi bi-save"></i> <span *ngIf="saving">Enregistrement...</span>
+                <span *ngIf="!saving">Enregistrer</span>
+              </button>
+      
+              <button class="btn btn-warning btn-sm" (click)="deployWorkflow()">
+                <i class="bi bi-rocket"></i> Déployer
+              </button>
+      
+              <button class="btn btn-success btn-sm" (click)="saveAndDeployWorkflow()">
+                <i class="bi bi-cloud-upload"></i> Enregistrer & Déployer
+              </button>
+      
+              <button class="btn btn-secondary btn-sm" (click)="exportWorkflow()">
+                <i class="bi bi-file-earmark-arrow-down"></i> Exporter
+              </button>
+      
+              <button class="btn btn-dark btn-sm" (click)="goBack()">
+                <i class="bi bi-arrow-left"></i> Retour
+              </button>
+            </div>
+          </div>
+    
+      
+      
+      
+      <div class="validation-errors" *ngIf="validationErrors.length > 0">
+        <h4>Erreurs de Validation :</h4>
+        <ul>
+          <li *ngFor="let error of validationErrors">{{ error }}</li>
+        </ul>
+      </div>
+    </div> 
+  
+    <div class="design-area">
+      <div class="node-palette">
+        <h3>Types de Nœuds</h3>
+        <div
+          cdkDropList
+          id="node-palette" 
+          [cdkDropListData]="availableNodes"
+          [cdkDropListConnectedTo]="['canvas']"
+          class="node-list">
+          <div class="node-item" *ngFor="let node of availableNodes" cdkDrag [cdkDragDisabled]="false">
+            <i *ngIf="node.style?.icon" [class]="node.style.icon"></i>
+            <span [style.color]="node.style?.color">{{ node.name }}</span>
+          </div>
+        </div>
+      </div>
+  
+      <div
+        #canvas
+        id="canvas"
+        cdkDropList
+        [cdkDropListData]="workflowDefinition.nodes"
+        [cdkDropListConnectedTo]="['node-palette']"
+        (cdkDropListDropped)="onDrop($event)"
+        class="canvas"
+        (click)="deselectAll()">
+        
+        <svg class="connections">
+          <g *ngFor="let conn of getConnectionsWithNodes()">
+            <path
+              [attr.d]="generatePathData(conn.sourceNode.position, conn.targetNode.position)"
+              [class.selected]="selectedConnection?.id === conn.id"
+              stroke="black"
+              fill="none"
+              stroke-width="2"
+              (click)="selectConnection(conn, $event)">
+            </path>
+            
+            <text
+              [attr.x]="calculateConnectionLabelPosition(conn.sourceNode.position, conn.targetNode.position).x"
+              [attr.y]="calculateConnectionLabelPosition(conn.sourceNode.position, conn.targetNode.position).y - 15"
+              text-anchor="middle"
+              (click)="selectConnection(conn, $event)">
+              {{ conn.name || '' }}
+            </text>
+              
+            <foreignObject
+              [attr.x]="calculateConnectionLabelPosition(conn.sourceNode.position, conn.targetNode.position).x - 10"
+              [attr.y]="calculateConnectionLabelPosition(conn.sourceNode.position, conn.targetNode.position).y - 35"
+              width="20"
+              height="20">
+              <button (click)="deleteConnection(conn, $event)" class="delete-connection-btn">×</button>
+            </foreignObject>
+          </g>
+        </svg>
+        
+        <div
+          *ngFor="let node of workflowDefinition.nodes"
+          class="node"
+          [class.selected]="selectedNode?.id === node.id"
+          [class.connecting]="connecting && sourceNode?.id === node.id"
+          [style.left.px]="node.position.x"
+          [style.top.px]="node.position.y"
+          [style.borderColor]="node.style?.color"
+          (click)="selectNode(node, $event)"
+          cdkDrag
+          [cdkDragData]="node"
+          (cdkDragEnded)="onNodeDragEnded($event, node)">
+          <div class="node-header" [ngClass]="node.type" [style.backgroundColor]="node.style?.color">
+            <i *ngIf="node.style?.icon" [class]="node.style.icon"></i>
+            {{ node.name }}
+          </div>
+          <div class="node-type">{{ node.type }}</div>
+          <div class="node-connector" (click)="startConnecting(node, $event)" title="Connecter à un autre nœud">
+            <i class="material-icons">link</i>
+          </div>
+          <div class="validation-indicator" *ngIf="node.validations && node.validations.length > 0" 
+               title="Ce nœud a {{ node.validations.length }} validation(s)">
+            <i class="material-icons">rule</i>
+            <span class="validation-count">{{ node.validations.length }}</span>
+          </div>
+        </div>
+      </div>
+  
+      <div class="properties-panel" *ngIf="selectedNode">
+        <h3>Propriétés du Nœud</h3>
+        
+        <div class="form-group">
+          <label for="nodeName">Nom :</label>
+          <input id="nodeName" type="text" [(ngModel)]="selectedNode.name" (change)="markUnsaved()">
+        </div>
+        
+        <div class="form-group">
+          <label for="nodeDescription">Description :</label>
+          <textarea id="nodeDescription" [(ngModel)]="selectedNode.description" (change)="markUnsaved()"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Type :</label>
+          <div class="node-type-display">{{ selectedNode.type }}</div>
+        </div>
+        
+        <ng-container *ngIf="selectedNode.type">
+          <div class="node-properties">
+            <ng-container *ngFor="let propDef of getNodeTypeProperties(selectedNode.type)">
+              <div class="form-group">
+                <label [for]="'prop_' + propDef.name">{{ propDef.label || propDef.name }} :</label>
+                
+                <ng-container [ngSwitch]="propDef.type">
+                  <input *ngSwitchCase="'string'" 
+                    [id]="'prop_' + propDef.name" 
+                    type="text" 
+                    [(ngModel)]="selectedNode.properties[propDef.name]"
+                    (change)="markUnsaved()">
+                  
+                  <input *ngSwitchCase="'number'" 
+                    [id]="'prop_' + propDef.name" 
+                    type="number" 
+                    [(ngModel)]="selectedNode.properties[propDef.name]"
+                    (change)="markUnsaved()">
+                  
+                  <input *ngSwitchCase="'boolean'" 
+                    [id]="'prop_' + propDef.name" 
+                    type="checkbox" 
+                    [(ngModel)]="selectedNode.properties[propDef.name]"
+                    (change)="markUnsaved()">
+                  
+                  <select *ngSwitchCase="'enum'" 
+                    [id]="'prop_' + propDef.name" 
+                    [(ngModel)]="selectedNode.properties[propDef.name]"
+                    (change)="markUnsaved()">
+                    <option *ngFor="let option of propDef.options" [value]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  
+                  <input *ngSwitchDefault 
+                    [id]="'prop_' + propDef.name" 
+                    type="text" 
+                    [(ngModel)]="selectedNode.properties[propDef.name]"
+                    (change)="markUnsaved()">
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        
+        
+        <div class="node-validations" *ngIf="selectedNode.type !== 'START' && selectedNode.type !== 'END'">
+          <h4>Validations</h4>
+          
+          <div class="validation-list" *ngIf="selectedNode.validations && selectedNode.validations.length > 0">
+            <div class="validation-item" *ngFor="let validation of selectedNode.validations">
+              <div class="validation-header">
+                <span class="validation-type" [ngClass]="validation.severity.toLowerCase()">
+                  {{ validation.name }}
+                </span>
+                <span class="validation-severity">{{ validation.severity }}</span>
+                <button class="delete-validation-btn" (click)="removeNodeValidation(validation.id)" title="Supprimer la validation">×</button>
+              </div>
+              
+              <div class="validation-details mt-2" *ngIf="validation.parameters">
+                <div class="param-item" *ngIf="validation.parameters.description">
+                  <label>Description :</label>
+                  <p>{{ validation.parameters.description }}</p>
+                </div>
+                
+                <div class="param-item" *ngIf="validation.parameters.required !== undefined">
+                  <label>Requis :</label>
+                  <span>{{ validation.parameters.required ? 'Oui' : 'Non' }}</span>
+                </div>
+                
+                <div class="param-item" *ngIf="validation.parameters.timeoutMinutes">
+                  <label>Délai d'expiration :</label>
+                  <span>{{ validation.parameters.timeoutMinutes }} minutes</span>
+                </div>
+              </div>
+              
+              <div class="assignment-info mt-2">
+                <div *ngIf="validation.assignedUser">
+                  <label>Assigné à l'utilisateur :</label>
+                  <span>{{ getUserNameById(+validation.assignedUser.id) }}</span>
+                </div>
+                
+                <div *ngIf="validation.assignedRole">
+                  <label>Assigné au rôle :</label>
+                  <span>{{ getRoleNameById(+validation.assignedRole.id) }}</span>
+                </div>
+              </div>
+              </div>
+            </div>
+          
+          <div class="no-validations" *ngIf="!selectedNode.validations || selectedNode.validations.length === 0">
+            <p>Aucune validation définie pour ce nœud.</p>
+          </div>
+          
+          <div class="add-validation-container" style="text-align: center; margin: 20px 0;">
+            <button class="add-validation-btn" (click)="addNodeValidation()">
+              <svg class="anticon" fill="currentColor" viewBox="0 0 1024 1024" focusable="false" data-icon="add-circle" width="1em" height="1em">
+                <path d="M511.8 85.3c0-6.6-5.4-12-12-12h-80.7c-6.6 0-12 5.4-12 12v193.1h-193.1c-6.6 0-12 5.4-12 12v80.7c0 6.6 5.4 12 12 12h193.1v193.1c0 6.6 5.4 12 12 12h80.7c6.6 0 12-5.4 12-12v-193.1h193.1c6.6 0 12-5.4 12-12v-80.7c0-6.6-5.4-12-12-12h-193.1v-193.1z"/>
+              </svg> Ajouter une Validation
+            </button>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button (click)="updateNodeProperties()" class="primary-btn">Appliquer</button>
+          <button (click)="deleteSelectedNode()" class="delete-btn">Supprimer le Nœud</button>
+        </div>
+      </div>
+      
+      <div class="properties-panel" *ngIf="selectedConnection">
+        <h3>Propriétés de la Connexion</h3>
+        
+        <div class="form-group">
+          <label for="connectionName">Libellé :</label>
+          <input id="connectionName" type="text" [(ngModel)]="selectedConnection.name" (change)="markUnsaved()">
+        </div>
+        
+        <div class="form-group" *ngIf="selectedConnection.sourceId && selectedConnection.targetId">
+          <label>De :</label>
+          <div class="connection-node-display">
+            {{ getNodeNameById(selectedConnection.sourceId) || selectedConnection.sourceId }}
+          </div>
+          
+          <label>À :</label>
+          <div class="connection-node-display">
+            {{ getNodeNameById(selectedConnection.targetId) || selectedConnection.targetId }}
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button (click)="updateConnectionName()" class="primary-btn">Appliquer</button>
+          <button (click)="deleteConnection(selectedConnection)" class="delete-btn">Supprimer la Connexion</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+

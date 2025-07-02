@@ -1,0 +1,114 @@
+/* Style des cartes */
+.card {
+    border-radius: 10px; /* Coins arrondis pour les cartes */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+    margin-bottom: 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+}
+
+/* Style des boutons */
+.btn {
+    border-radius: 5px; /* Coins arrondis pour les boutons */
+    padding: 10px 15px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Couleur plus foncée au survol */
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800; /* Couleur plus foncée au survol */
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Couleur plus foncée au survol */
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333; /* Couleur plus foncée au survol */
+}
+
+/* Style du champ de recherche */
+input.form-control {
+    border-radius: 20px; /* Coins arrondis pour la barre de recherche */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+input.form-control:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Ombre bleue sur focus */
+}
+
+/* Style des éléments de la liste */
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1; /* Fond léger au survol */
+}
+
+/* Espacement et alignement */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+/* Pour l'alignement des colonnes */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Responsivité pour les colonnes */
+@media (max-width: 767px) {
+    .col-12 {
+        width: 100%;
+    }
+
+    .col-md-5, .col-md-7 {
+        width: 100%;
+    }
+}

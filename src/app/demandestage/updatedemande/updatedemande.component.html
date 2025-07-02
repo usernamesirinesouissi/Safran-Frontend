@@ -1,0 +1,157 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      </div>
+      <div class="content-body">
+        <section id="basic-form-layouts">
+          <div class="card">
+            <div class="card-content collapse show">
+              <div class="card-body">
+                <form [formGroup]="demandeForm" (ngSubmit)="onUpdateSubmit()">
+                  <div class="form-body">
+                    <h4 class="form-section"><i class="feather ft-file-text"></i> Détails du Projet</h4>
+
+                    <div class="form-group">
+                      <label for="intituleProjet">Intitulé du Projet</label>
+                      <input type="text" id="intituleProjet" class="form-control" formControlName="intituleProjet">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+    
+                      <div class="form-group">
+                        <label for="descriptionProjet">Description du Projet</label>
+                        <textarea id="descriptionProjet" rows="3" class="form-control" placeholder="Description du Projet"
+                          formControlName="descriptionProjet"></textarea>
+                      </div> 
+                        </div>
+                        <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="risquesProjet">Risques du Projet</label>
+                        <textarea id="risquesProjet" rows="3" class="form-control" placeholder="Risques du Projet"
+                          formControlName="risquesProjet"></textarea>
+                      </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="objectifsProjet">Objectifs du Projet</label>
+                        <textarea id="objectifsProjet" rows="3" class="form-control" placeholder="Objectifs du Projet"
+                          formControlName="objectifsProjet"></textarea>
+                      </div>
+                        </div>
+                        <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="descriptionLivrables">Description des Livrables</label>
+                        <textarea id="descriptionLivrables" rows="3" class="form-control" placeholder="Description des Livrables"
+                          formControlName="descriptionLivrables"></textarea>
+                      </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="effortEstime">Effort Estimé</label>
+                        <input type="text" id="effortEstime" class="form-control" placeholder="Effort Estimé"
+                          formControlName="effortEstime">
+                      </div>
+                        </div>
+                        <div class="col-md-6">
+
+                      <div class="form-group">
+                        <label for="nombreStagiaires">Nombre de Stagiaires</label>
+                        <input type="number" id="nombreStagiaires" class="form-control" placeholder="Nombre de Stagiaires"
+                          formControlName="nombreStagiaires">
+                      </div>
+                        </div>    
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+    
+                      <div class="form-group">
+                        <label for="dureeEstime">Durée Estimée</label>
+                        <input type="number" id="dureeEstime" class="form-control" placeholder="Durée Estimée par mois"
+                          formControlName="dureeEstime">
+                      </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="mb-3">
+                            <label class="control-label">Type Stage</label>
+                            <ng-select [items]="typeStages" [multiple]="false" bindLabel="nom" bindValue="id" formControlName="typeStage"
+                                       [ngClass]="{'is-invalid': submitted && demandeForm.controls['typeStage'].errors}">
+                            </ng-select>
+                            <div *ngIf="submitted && demandeForm.controls['typeStage'].errors" class="invalid-feedback">
+                              <span *ngIf="demandeForm.controls['typeStage'].errors.required">Ce champ est requis.</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <h4 class="form-section"><i class="feather ft-user-check"></i> Pré-requis Candidat </h4>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="control-label">Exigences Techniques</label>
+                          <ng-select [items]="competencesTechniques" [multiple]="true" bindLabel="nom" bindValue="id" formControlName="competencestechnique"
+                                     [ngClass]="{'is-invalid': submitted && demandeForm.controls['competencestechnique'].errors}">
+                          </ng-select>
+                          <div *ngIf="submitted && demandeForm.controls['competencestechnique'].errors" class="invalid-feedback">
+                            <span *ngIf="demandeForm.controls['competencestechnique'].errors.required">Ce champ est requis.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="control-label">Compétences Comportementales</label>
+                          <ng-select [items]="competencesComportementales" [multiple]="true" bindLabel="nom" bindValue="id" formControlName="competencescomportementale"
+                                     [ngClass]="{'is-invalid': submitted && demandeForm.controls['competencescomportementale'].errors}">
+                          </ng-select>
+                          <div *ngIf="submitted && demandeForm.controls['competencescomportementale'].errors" class="invalid-feedback">
+                            <span *ngIf="demandeForm.controls['competencescomportementale'].errors.required">Ce champ est requis.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="control-label">Propositions Écoles</label>
+                          <ng-select [items]="propositionsEcoles" [multiple]="true" bindLabel="nom" bindValue="id" formControlName="propecole"
+                                     [ngClass]="{'is-invalid': submitted && demandeForm.controls['propecole'].errors}">
+                          </ng-select>
+                          <div *ngIf="submitted && demandeForm.controls['propecole'].errors" class="invalid-feedback">
+                            <span *ngIf="demandeForm.controls['propecole'].errors.required">Ce champ est requis.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="control-label">Formation Académique</label>
+                          <ng-select [items]="formationsAcademiques" [multiple]="true" bindLabel="nom" bindValue="id" formControlName="formationacademique"
+                                     [ngClass]="{'is-invalid': submitted && demandeForm.controls['formationacademique'].errors}">
+                          </ng-select>
+                          <div *ngIf="submitted && demandeForm.controls['formationacademique'].errors" class="invalid-feedback">
+                            <span *ngIf="demandeForm.controls['formationacademique'].errors.required">Ce champ est requis.</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-actions">
+                      <button type="button" class="btn btn-warning mr-1" [routerLink]="['/demande/list']">
+                        <i class="feather ft-x"></i> Annuler
+                      </button>
+                      <button type="submit" class="btn btn-primary">
+                        <i class="la la-check"></i> Mettre à jour
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>

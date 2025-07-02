@@ -1,0 +1,290 @@
+/* Ajoutez ces styles si vous ne les avez pas déjà */
+.mr-1 {
+  margin-right: 5px;
+}
+
+.mrless {
+  margin-right: 3px;
+}
+
+.primary {
+  color: #007bff;
+}
+
+.editbut {
+  color: #0fa020; 
+}
+
+.danger {
+  color: #dc3545; 
+}
+
+.primary:hover, .editbut:hover, .danger:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px; 
+  font-weight: 500; 
+  font-size: 13px; 
+  letter-spacing: 0.5px;
+}
+
+.status-blue {
+  background-color: rgba(0, 123, 255, 0.15);
+  color: #0056b3;
+}
+
+.row.mb-1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.row.mb-1 .col-md-3,
+.row.mb-1 .col-md-2 {
+  padding: 0 5px;
+}
+
+/* Pagination styles */
+.pagination .page-item .page-link {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e1e5eb;
+}
+
+
+/* Ajoutez à vos styles globaux ou au fichier CSS du composant */
+.btn-sm-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.btn-outline-success {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Animation pendant le téléchargement */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.downloading {
+  animation: pulse 1s infinite;
+}
+
+/*
+ * NOUVEAUX STYLES POUR UN AFFICHAGE PLUS FIN DES STATUTS DE DOCUMENT
+ */
+
+/* Conteneur pour l'icône de statut et le lien de téléchargement */
+.doc-status-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centre les éléments dans la cellule */
+  gap: 8px; /* Espace entre l'icône de statut et l'icône de téléchargement */
+}
+
+/* Style de base pour les icônes de statut (✓ et X) */
+.doc-status-icon {
+  font-size: 1.2rem;   /* Taille de l'icône légèrement augmentée pour la visibilité */
+  font-weight: 600;  /* Rend l'icône un peu plus épaisse mais pas trop, pour un look net */
+}
+
+/* Couleur pour l'icône de succès (✓) */
+.doc-status-success {
+  color: #28a745; /* Vert succès */
+}
+
+/* Couleur pour l'icône d'échec (X) */
+.doc-status-danger {
+  color: #dc3545; /* Rouge danger */
+}
+
+/* Style pour l'icône de téléchargement à côté du statut */
+.doc-download-icon {
+  color: #007bff; /* Bleu primaire */
+  font-size: 1.1rem; /* Taille alignée sur les icônes de statut */
+  transition: opacity 0.2s ease-in-out; /* Animation douce au survol */
+}
+
+.doc-download-icon:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+
+
+
+/*
+ * NOUVEAUX STYLES POUR LES ICÔNES D'ACTIONS SANS CADRE
+ */
+
+/* Classe de base pour les icônes d'action cliquables */
+.action-icon {
+  font-size: 1.4rem;  /* On les rend un peu plus grandes pour être cliquables facilement */
+  text-decoration: none !important; /* Enlève le soulignement des liens <a> */
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Applique un effet de survol simple */
+.action-icon:hover {
+  opacity: 0.7;
+}
+
+/* Classe pour la couleur verte (succès) */
+.action-icon-success {
+  color: #28a745; 
+}
+
+/* Classe pour la couleur bleue (info) */
+.action-icon-info {
+  color: #17a2b8;
+}
+
+/* Style pour une icône désactivée */
+.action-icon-disabled {
+  color: #adb5bd;  /* Couleur grise standard pour le désactivé */
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Animation pour l'icône de chargement (spinner) */
+.la-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* Style personnalisé des checkbox */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #007bff; /* Couleur bleue primaire */
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.d-flex {
+  display: flex;
+}
+
+
+
+/* Styles pour la nouvelle barre de recherche */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  margin-bottom: 30px;
+  align-items: center;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0 10px;
+  flex-grow: 1;
+  min-width: 180px;
+}
+
+.filter-item .icon {
+  color: #718096;
+  margin-right: 8px;
+  font-size: 1em;
+  flex-shrink: 0;
+}
+
+.filter-item input[type="text"],
+.filter-item select {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 10px 5px;
+  margin: 0;
+  font-family: inherit;
+  font-size: 0.9em;
+  color: #2d3748;
+  min-width: 0;
+  width: 100%;
+}
+
+.filter-item select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23718096' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 0.8em;
+  padding-right: calc(10px + 0.8em + 8px);
+}
+
+.filter-item input[type="text"]::placeholder {
+  color: #718096;
+  opacity: 1;
+}
+
+.btn-outline-secondary {
+  background-color: #6b7280;
+  color: white;
+  border: none;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #4b5563;
+  color: white;
+}

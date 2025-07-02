@@ -1,0 +1,195 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+
+<div class="workflow-management-container">
+  <div class="header">
+      <h1>Gestion des flux de travail</h1>
+
+
+
+      <div class="actions">
+          <button class="btn create-btn" (click)="createNewWorkflow()">Créer un nouveau flux de travail</button>
+          <button class="btn import-btn" (click)="openImportModal()">Importer un flux de travail</button>
+          <button class="btn btn-secondary" (click)="goToDashboard()">Annuler</button>
+
+      </div>
+  </div>
+
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col-md-3 pr-1">
+        <input type="text" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchQuery" (input)="filterWorkflows()">
+      </div>
+      <div class="col-md-2 pr-1">
+        <select class="form-control" [(ngModel)]="selectedStatus" (change)="filterWorkflows()">
+          <option value="">Sélectionner le statut</option>
+          <option value="BROUILLON">Brouillon</option>
+          <option value="ACTIF">Actif</option>
+          <option value="DÉPRÉCIÉ">Déprécié</option>
+        </select>
+      </div>
+      <div class="col-md-2 pr-1">
+        <select class="form-control" [(ngModel)]="selectedType" (change)="filterWorkflows()">
+          <option value="">Sélectionner le type de stage</option>
+          <option *ngFor="let type of stageTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+      <div class="col-md-2 pr-1">
+        <button class="btn btn-outline-secondary" (click)="filterWorkflows()">
+          <i class="la la-filter"></i> Filtrer
+        </button>
+      </div>
+    </div>
+    
+    
+    <div class="content">
+      <div *ngIf="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Chargement des flux de travail...</p>
+      </div>
+      
+      <div *ngIf="error" class="error-message">
+        <p>Échec du chargement des flux de travail. Veuillez réessayer.</p>
+        <button class="btn retry-btn" (click)="loadWorkflowDefinitions()">Réessayer</button>
+      </div>
+      
+      <div *ngIf="!loading && !error && workflowDefinitions.length === 0" class="empty-state">
+        <p>Aucun flux de travail trouvé. Créez un nouveau flux de travail pour commencer.</p>
+        <button class="btn create-btn" (click)="createNewWorkflow()">Créer un nouveau flux de travail</button>
+      </div>
+      
+      <div *ngIf="!loading && !error && workflowDefinitions.length > 0" class="workflow-list">
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nom</th>
+              <th scope="col">Type de stage</th>
+              <th scope="col">Statut</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let workflow of workflowDefinitions; let i = index" (click)="editWorkflow(workflow.id)" class="workflow-row">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ workflow.name }}</td>
+              <td>
+                <ng-container *ngIf="workflow.typeStages?.length > 0; else noTypeStage">
+                  <span *ngFor="let stage of workflow.typeStages" class="badge bg-info me-1">
+                    {{ stage.nomTypeStage }}
+                  </span>
+                </ng-container>
+                <ng-template #noTypeStage>
+                  <span class="text-muted">Aucun</span>
+                </ng-template>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(workflow.status)">
+                  {{ workflow.status || 'BROUILLON' }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button class="btn btn-primary btn-sm" (click)="editWorkflow(workflow.id); $event.stopPropagation()">
+                  <i nz-icon nzType="edit" nzTheme="outline"></i> Modifier
+                </button>
+                <button class="btn btn-success btn-sm" (click)="deployWorkflow(workflow, $event)" [disabled]="workflow.status === 'ACTIVE' || workflow.status === 'DEPRECATED'">
+                  <i nz-icon nzType="rocket" nzTheme="outline"></i> Activer
+                </button>
+                <button class="btn btn-warning btn-sm" (click)="exportWorkflow(workflow, $event)">
+                  <i nz-icon nzType="download" nzTheme="outline"></i> Exporter
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteWorkflow(workflow.id, $event)">
+                  <i nz-icon nzType="delete" nzTheme="outline"></i> Supprimer
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+    </div>
+    
+    <div class="modal-overlay" *ngIf="importJsonModalVisible">
+      <div class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Importer un flux de travail</h2>
+            <button class="close-btn" (click)="closeImportModal()">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="fileInput">Télécharger un fichier JSON :</label>
+              <input type="file" id="fileInput" accept=".json" (change)="handleFileInput($event)">
+            </div>
+            <div class="form-group">
+              <label for="jsonContent">Ou coller le contenu JSON :</label>
+              <textarea id="jsonContent" rows="10" [(ngModel)]="jsonImportText"></textarea>
+            </div>
+            <div *ngIf="importError" class="error-message">
+              {{ importError }}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn cancel-btn" (click)="closeImportModal()">Annuler</button>
+            <button class="btn import-btn" (click)="importWorkflow()" [disabled]="!jsonImportText">Importer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-overlay" *ngIf="instantiateModalVisible">
+      <div class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Instancier le flux de travail: {{ selectedWorkflow?.name }}</h2>
+            <button class="close-btn" (click)="closeInstantiateModal()">×</button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="instantiateForm" (ngSubmit)="instantiateWorkflow()">
+              <div class="form-group">
+                <label for="variables">Variables (format JSON):</label>
+                <div class="action-row">
+                  <button type="button" class="btn btn-sm format-btn" (click)="formatVariables()">Formater JSON</button>
+                </div>
+                <textarea 
+                  id="variables" 
+                  rows="12" 
+                  formControlName="variables" 
+                  class="code-editor"
+                  placeholder='{"requestType":"approval","priority":"high","department":"finance"}'
+                ></textarea>
+              </div>
+              
+              <div *ngIf="instantiateError" class="error-message">
+                {{ instantiateError }}
+              </div>
+              
+              <div *ngIf="instantiateSuccess" class="success-message">
+                {{ instantiateSuccess }}
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn cancel-btn" (click)="closeInstantiateModal()">Annuler</button>
+            <button 
+              class="btn instantiate-btn" 
+              (click)="instantiateWorkflow()" 
+              [disabled]="instantiating"
+            >
+              <span *ngIf="!instantiating">Instancier</span>
+              <span *ngIf="instantiating">
+                <i nz-icon nzType="loading" nzTheme="outline"></i> Traitement...
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>

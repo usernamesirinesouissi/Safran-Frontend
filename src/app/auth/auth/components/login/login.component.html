@@ -1,0 +1,83 @@
+<!-- login.component.html -->
+<div class="login-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-lg">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title text-center">Connexion</h3>
+          </div>
+          <div class="card-body p-4">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <!-- Username Field -->
+              <div class="mb-3">
+                <label for="username" class="form-label">Nom d'utilisateur</label>
+                <input 
+                  type="text" 
+                  id="username"
+                  formControlName="username" 
+                  class="form-control form-control-lg"
+                  [ngClass]="{
+                    'is-invalid': loginForm.get('username')?.invalid && 
+                                (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)
+                  }"
+                  placeholder="Entrez votre nom d'utilisateur">
+                <div *ngIf="loginForm.get('username')?.invalid && 
+                           (loginForm.get('username')?.dirty || loginForm.get('username')?.touched)"
+                     class="invalid-feedback">
+                  Le nom d'utilisateur est requis
+                </div>
+              </div>
+
+              <!-- Password Field -->
+              <div class="mb-4">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input 
+                  type="password" 
+                  id="password"
+                  formControlName="password" 
+                  class="form-control form-control-lg"
+                  [ngClass]="{
+                    'is-invalid': loginForm.get('password')?.invalid && 
+                                (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)
+                  }"
+                  placeholder="Entrez votre mot de passe">
+                <div *ngIf="loginForm.get('password')?.invalid && 
+                           (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+                     class="invalid-feedback">
+                  Le mot de passe est requis
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="text-center mt-4">
+                <button 
+                  type="submit" 
+                  class="btn btn-primary btn-lg px-5"
+                  [disabled]="loginForm.invalid || isLoading">
+                  <span *ngIf="!isLoading">
+                    <i class="fas fa-sign-in-alt me-2"></i>Connexion
+                  </span>
+                  <span *ngIf="isLoading">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Connexion...
+                  </span>
+                </button>
+              </div>
+
+              <!-- Error Message -->
+              <div *ngIf="errorMessage" class="alert alert-danger mt-4 text-center">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ errorMessage }}
+              </div>
+            </form>
+          </div>
+          <div class="card-footer text-center">
+            <small class="text-muted">
+              Pas encore de compte? <a routerLink="/register">Inscrivez-vous ici</a>
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+    <div class="content-header row mb-1">
+      <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+    </div>
+    <div class="content-body">
+<div class="stagiaires-container">
+
+  <div class="filter-bar">
+    <div class="filter-item">
+      <i class="la la-search"></i>
+      <input type="text" placeholder="Rechercher un stagiaire..." (ngModelChange)="applyFilters()">
+    </div>
+    <div class="filter-item">
+      <i class="la la-map-marker-alt icon"></i>
+      <select  (ngModelChange)="applyFilters()">
+        <option value="">Toutes les localisations</option>
+        <option *ngFor="let loc of availableLocations" [value]="loc">{{ loc }}</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <i class="la la-briefcase icon"></i>
+      <select  (ngModelChange)="applyFilters()">
+        <option value="">Tous les rôles</option>
+        <option *ngFor="let role of availableRoles" [value]="role">{{ role }}</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <i class="fas fa-calendar-alt icon"></i>
+      <input type="text" placeholder="Datepicker (non implémenté)"(ngModelChange)="applyFilters()">
+      <!-- For a real date picker, you'd use a library like ngx-bootstrap-datepicker or Angular Material Datepicker -->
+    </div>
+    <button class="btn btn-primary" (click)="applyFilters()">
+      <i class="la la-search"></i> Rechercher
+    </button>
+  </div>
+
+<div class="stagiaires-grid">
+  <div class="stagiaire-card" *ngFor="let stagiaire of filteredStagiaires">
+    <div class="card-top-row">
+      <span class="tag" [ngClass]="getTagClass(stagiaire.typeContrat)">{{ stagiaire.typeContrat }}</span>
+      <button class="favorite-btn" (click)="toggleFavori(stagiaire)" [class.favorited]="stagiaire.estFavori">
+        <i class="la la-heart"></i> <!-- Make sure Line Awesome icons are loaded -->
+      </button>
+    </div>
+
+    <div class="card-body">
+      <!-- Use a default image if photoUrl is null/empty after mapping -->
+ <img [src]="stagiaire.photoUrl" alt="Photo de {{ stagiaire.nom }}" class="profile-pic">
+      <h3 class="stagiaire-nom">{{ stagiaire.nom }}</h3> <!-- This will now display "Prenom Nom" -->
+      <p class="stagiaire-role">{{ stagiaire.role }}</p>
+
+
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-view-profile" (click)="viewProfile(stagiaire)">Voir Profil</button>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && filteredStagiaires.length === 0" class="no-results">
+    Aucun stagiaire ne correspond à vos critères.
+  </div>
+</div>
+    </div>
+  </div></div>

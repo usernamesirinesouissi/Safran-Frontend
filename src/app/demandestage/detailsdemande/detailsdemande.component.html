@@ -1,0 +1,202 @@
+<div class="app-content content">
+  <div class="content-wrapper">
+      <div class="content-body">
+          <div class="row">
+              <!-- Détails à gauche -->
+              <div class="col-xl-8">
+                  <div class="card">
+                    <div class="card-body border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1 ms-1">
+                                <p><strong>Details Demande de stage</strong></p>
+                                <ul class="list-unstyled hstack gap-2 mb-0">
+                                    <li>
+                                        <i class="bx bx-building-house"></i> 
+                                        <span class="text-muted">{{ demande.intituleProjet }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span class="badge" style="background-color: #007bff; color: white;"> Innovation </span>
+                        </div>
+                    </div>
+                    
+                    
+                      <div class="card-body">
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <p><strong>Description:</strong></p>
+                                  <p class="text-muted">{{ demande.descriptionProjet }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Risques :</strong></p>
+                                  <p class="text-muted">{{ demande.risquesProjet }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Objectifs :</strong></p>
+                                  <p class="text-muted">{{ demande.objectifsProjet }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Livrables :</strong></p>
+                                  <p class="text-muted">{{ demande.descriptionLivrables }}</p>
+                              </div>
+                          </div>
+
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <p><strong>Effort Estimé :</strong> {{ demande.effortEstime }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Durée Estimée :</strong> {{ demande.dureeEstime }}</p>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Nombre de Stagiaires :</strong> {{ demande.nombreStagiaires }}</p>
+                              </div>
+                          </div>
+
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <p><strong>Formations Académiques :</strong></p>
+                                  <ul>
+                                      <li *ngFor="let formation of demande.formationacademique">
+                                          {{ formation.nom }}
+                                      </li>
+                                  </ul>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Propositions Écoles :</strong></p>
+                                  <ul>
+                                      <li *ngFor="let proposition of demande.propecole">
+                                          {{ proposition.nom }}
+                                      </li>
+                                  </ul>
+                              </div>
+                          </div>
+
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <p><strong>Compétences comportementale :</strong></p>
+                                  <div class="d-flex flex-wrap gap-2">
+                                      <span *ngFor="let competence of demande.competencescomportementale" class="badge-competence">
+                                          {{ competence.nom }}
+                                      </span>
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                  <p><strong>Compétences Technique :</strong></p>
+                                  <div class="d-flex flex-wrap gap-2">
+                                      <span *ngFor="let competence of demande.competencestechnique" class="badge-competence">
+                                          {{ competence.nom }}
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+
+                        
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-xl-4">
+                  <div class="card mb-1"> 
+                      <div class="card-body">
+                          <h5 class="fw-semibold">Aperçu </h5>
+                          <div class="table-responsive">
+                              <table class="table">
+                                  <tbody>
+                                      <tr>
+                                          <th scope="col">Intitulé</th>
+                                          <td scope="col">{{ demande.intituleProjet }}</td>
+                                      </tr>
+                                      <tr>
+                                          <th scope="row">Type de stage</th>
+                                          <td scope="col">{{ demande.typeStage?.nomTypeStage }}</td>
+                                      </tr>
+                                      <tr>
+                                          <th scope="row">Posted Date</th>
+                                          <td>25 June, 2022</td>
+                                      </tr>
+                                      <tr>
+                                          <th scope="row">Status</th>
+                                          <td>
+                                              <span class="status-badge"
+                                                  [ngClass]="{
+                                                      'status-orange': demande.statut?.id === 1,
+                                                      'status-blue': demande.statut?.id === 4,
+                                                      'status-green': demande.statut?.id === 2,
+                                                      'status-red': demande.statut?.id === 3
+                                                  }">
+                                                  {{ demande.statut?.nom }}
+                                              </span>
+                                          </td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="fw-semibold">Validations</h5>
+                  
+                      <!-- Display validation list in table format -->
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Validateur</th>
+                              <th scope="col">Statut</th>
+                              <th scope="col">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let validation of validations">
+                                <td>{{ validation.assignedTo }}</td>
+                                <td>
+                                  <span class="status-badge"
+                                        [ngClass]="{
+                                          'status-orange': validation.status === 'PENDING',
+                                          'status-green': validation.status === 'APPROVED',
+                                          'status-red': validation.status === 'REJECTED'
+                                        }">
+                                    {{ 
+                                      validation.status === 'PENDING' ? 'En attente' :
+                                      validation.status === 'APPROVED' ? 'Validée' :
+                                      validation.status === 'REJECTED' ? 'Refusée' : validation.status 
+                                    }}
+                                  </span>
+                                </td>
+                                <td>
+                                  <button *ngIf="validation.status === 'REJECTED'" 
+                                          class="btn btn-danger btn-sm"
+                                          (click)="openMotifRefusModal(validation.comments)">
+                                    <i class="la la-eye"></i> Voir motif
+                                  </button>
+                                </td>
+                              </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div><ng-template #refuseModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Motif de Refus</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')">
+        <span>&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>{{ selectedMotif }}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">Fermer</button>
+    </div>
+  </ng-template>

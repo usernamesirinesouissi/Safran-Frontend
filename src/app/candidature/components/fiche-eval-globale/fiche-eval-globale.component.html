@@ -1,0 +1,125 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <app-breadcrumb class="col-sm-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      </div>
+      <div class="fiche-eval-container p-0"> <!-- Enlevé p-3 pour que le modal/page le gère -->
+        <div *ngIf="isLoading && entretienId" class="d-flex justify-content-center my-5">
+          <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Chargement de la fiche d'évaluation...</span>
+          </div>
+        </div>
+
+        <div *ngIf="!isLoading && ficheEval">
+          <ul class="nav nav-tabs nav-fill mb-3 sticky-top bg-white" style="z-index: 10;">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'global'" (click)="changeTab('global')">
+                <i class="la la-globe"></i> Vue Globale
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'rh'" (click)="changeTab('rh')">
+                <i class="la la-users"></i> Évaluation RH
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="activeTab === 'tech'" (click)="changeTab('tech')">
+                <i class="la la-cogs"></i> Évaluation Technique
+              </a>
+            </li>
+          </ul>
+
+          <div class="tab-content mt-3">
+            <!-- Vue Globale -->
+            <div *ngIf="activeTab === 'global'" class="tab-pane fade show active">
+              <div class="row">
+                <!-- Score Global -->
+                <div class="col-md-4">
+                  <div class="card score-card">
+                    <div class="card-body text-center">
+                      <h6 class="card-subtitle">SCORE GLOBAL</h6>
+                      <div class="radial-progress" [style.--value]="ficheEval.scoreTotal * 100 / 100">
+                        {{ ficheEval.scoreTotal | number:'1.0-0' }}
+                      </div>
+                      <div class="status-badge" [class]="getBadgeClassForGlobalStatut()">
+                        {{ getGlobalStatut() }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Score RH -->
+                <div class="col-md-4">
+                  <div class="card score-card" (click)="changeTab('rh')" style="cursor: pointer;">
+                    <div class="card-body text-center">
+                      <h6 class="card-subtitle">SCORE RH</h6>
+                      <div class="radial-progress rh-progress"
+                           [style.--value]="ficheEval.ficheRh?.scoreTotalRh * 100 / 100"
+                           [style.--color]="getScoreColor(ficheEval.ficheRh?.scoreTotalRh)">
+                        {{ ficheEval.ficheRh?.scoreTotalRh != null ? (ficheEval.ficheRh?.scoreTotalRh % 1 === 0 ? ficheEval.ficheRh?.scoreTotalRh : ficheEval.ficheRh?.scoreTotalRh | number:'1.0-0') : 'N/A' }}
+                      </div>
+                      <div class="status-badge" [class]="getBadgeClassForStatut(ficheEval.ficheRh?.statut)">
+                        {{ ficheEval.ficheRh?.statut?.nomStatut || 'Non défini' }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Score Technique -->
+                <div class="col-md-4">
+                  <div class="card score-card" (click)="changeTab('tech')" style="cursor: pointer;">
+                    <div class="card-body text-center">
+                      <h6 class="card-subtitle">SCORE TECHNIQUE</h6>
+                      <div class="radial-progress"
+                           [style.--value]="ficheEval.ficheTech?.scoreTotalTech * 100 / 100"
+                           [style.--color]="getScoreColor(ficheEval.ficheTech?.scoreTotalTech)">
+                        {{ ficheEval.ficheTech?.scoreTotalTech != null ? (ficheEval.ficheTech?.scoreTotalTech % 1 === 0 ? ficheEval.ficheTech?.scoreTotalTech : ficheEval.ficheTech?.scoreTotalTech | number:'1.0-0') : 'N/A' }}
+                      </div>
+                      <div class="status-badge" [class]="getBadgeClassForStatut(ficheEval.ficheTech?.statut)">
+                        {{ ficheEval.ficheTech?.statut?.nomStatut || 'Non défini' }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+       
+              <!-- SECTION FOR "Détail Évaluation RH" and "Détail Évaluation Technique" HAS BEEN REMOVED -->
+
+            </div> <!-- End of *ngIf="activeTab === 'global'" -->
+
+            <!-- Évaluation RH -->
+            <!-- This div now correctly appears only when activeTab is 'rh' -->
+            <div *ngIf="activeTab === 'rh'" class="tab-pane fade show active">
+              <app-fiche-eval-rh
+                *ngIf="ficheEval.id && ficheEval.ficheRh"
+                [ficheEvalId]="ficheEval.id"
+                [ficheRh]="ficheEval.ficheRh"
+                (rhUpdated)="handleFichePartUpdated()">
+              </app-fiche-eval-rh>
+              <div *ngIf="!ficheEval.ficheRh" class="alert alert-info">La partie RH de la fiche n'est pas encore initialisée.</div>
+            </div>
+
+            <!-- Évaluation Technique -->
+            <!-- This div now correctly appears only when activeTab is 'tech' -->
+            <div *ngIf="activeTab === 'tech'" class="tab-pane fade show active">
+              <app-fiche-eval-tech
+                *ngIf="ficheEval.id && ficheEval.ficheTech"
+                [ficheEvalId]="ficheEval.id"
+                [ficheTech]="ficheEval.ficheTech"
+                (techUpdated)="handleFichePartUpdated()">
+              </app-fiche-eval-tech>
+              <div *ngIf="!ficheEval.ficheTech" class="alert alert-info">La partie technique de la fiche n'est pas encore initialisée.</div>
+            </div>
+          </div> <!-- End of tab-content -->
+        </div> <!-- End of *ngIf="!isLoading && ficheEval" -->
+
+        <div *ngIf="!isLoading && !ficheEval && entretienId" class="alert alert-info m-3">
+          Aucune fiche d'évaluation trouvée pour cet entretien (ID: {{entretienId}}).
+          Elle est normalement créée automatiquement lors de la planification de l'entretien. Vérifiez la console pour des erreurs.
+        </div>
+        <div *ngIf="!entretienId && !isLoading" class="alert alert-warning m-3">
+          Veuillez sélectionner un entretien pour afficher sa fiche d'évaluation.
+        </div>
+      </div> <!-- End of fiche-eval-container -->
+    </div> <!-- End of content-wrapper -->
+</div> <!-- End of app-content -->

@@ -1,0 +1,123 @@
+<!-- listcampagne.component.html -->
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <app-breadcrumb class="col-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      </div>
+      <div class="content-body">
+        <div class="container mt-4">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h4 class="mb-0">Gestion des Campagnes</h4>
+              <button class="btn btn-primary" routerLink="/campagnes/nouvelle">
+                <i class="fas fa-plus me-2"></i>Nouvelle Campagne
+              </button>
+            </div>
+  
+            <div class="card-body">
+              <!-- Filtres -->
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col-md-3 ml-2">
+                    <input type="text" class="form-control" placeholder="Search for ...">
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-control">
+                      <option>Select Status</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-control">
+                      <option>Select Type</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100">
+                      <i class="la la-filter"></i> Filter
+                    </button>
+                  </div>
+                </div>
+              <!-- Tableau -->
+              <div class="table-responsive" *ngIf="!isLoading; else loading">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th (click)="sortCampaigns('academicYear')" class="sortable">
+                        Année Académique
+                      </th>
+                      <th (click)="sortCampaigns('typeStage.nomTypeStage')" class="sortable">
+                        Type de Stage
+                      </th>
+                      <th (click)="sortCampaigns('startDate')" class="sortable">
+                        Date Début
+                      </th>
+                      <th (click)="sortCampaigns('endDate')" class="sortable">
+                        Date Fin
+                      </th>
+                      <th>Statut</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let campaign of filteredCampaigns">
+                      <td>{{ campaign.academicYear }}</td>
+                      <td>{{ campaign.typeStage?.nomTypeStage || '-' }}</td>
+                      <td>{{ campaign.startDate | date: 'dd/MM/yyyy' }}</td>
+                      <td>{{ campaign.endDate | date: 'dd/MM/yyyy' }}</td>
+                      <td>
+                        <span [class]="getStatusClass(campaign.status)">
+                          {{ getStatusLabel(campaign.status) }}
+                        </span>
+                      </td>
+                      <td>
+                    
+                            <div class="btn-group">
+                              <!-- Bouton Éditer -->
+                              <button class="btn btn-sm btn-outline-primary" 
+                                      [routerLink]="['/campaigns/edit', campaign.id]"
+                                      title="Modifier">
+                                <i class="la la-pencil"></i>
+                              </button>
+                              
+                              <!-- Bouton Supprimer -->
+                              <button class="btn btn-sm btn-outline-danger" 
+                                      (click)="deleteCampaign(campaign.id)"
+                                      title="Supprimer">
+                                      <i class="la la-trash-o"></i>
+                                    </button>
+                              
+                              <!-- Bouton Envoyer rappel -->
+                              <button class="btn btn-sm btn-outline-success"
+                                      (click)="triggerReminders(campaign.id)"
+                                      *ngIf="campaign.status === 'ACTIVE'"
+                                      title="Envoyer rappel">
+                                <i class="la la-bell-o"></i>
+                              </button>
+                            </div>
+                          
+                      </td>
+                    </tr>
+                    <tr *ngIf="filteredCampaigns.length === 0">
+                      <td colspan="6" class="text-center">Aucune campagne trouvée</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+  
+              <ng-template #loading>
+                <div class="text-center py-5">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                  </div>
+                </div>
+              </ng-template>
+  
+              <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+                {{ errorMessage }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

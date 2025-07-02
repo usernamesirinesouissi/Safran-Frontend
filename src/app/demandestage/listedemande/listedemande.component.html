@@ -1,0 +1,138 @@
+<div class="app-content content">
+    <div class="content-wrapper">
+      <div class="content-header row mb-1">
+        <app-breadcrumb class="col-sm-12" [breadcrumb]="breadcrumb"></app-breadcrumb>
+      </div>
+      <div class="content-body">
+        <!-- Basic Tables start -->
+        <div class="row">
+          <div class="col-sm-12" *blockUI="'basicTables'; message: 'Loading'">
+            <div class="card">
+              <div class="card-header">
+                <div class="row align-items-center">
+                  <div class="col-md-6">
+                    <h4 class="card-title">Liste de mes Demandes</h4>
+                  </div>
+                  <div class="col-md-6 text-right">
+                    <button class="btn btn-primary" [routerLink]="['/demande/ajout']">Ajout Demande</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="card-body">
+                <div class="row mb-1">
+                  <div class="col-md-3 ml-2">
+                    <input type="text" class="form-control" placeholder="Recherche ...">
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-control">
+                      <option>Select Status</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <select class="form-control">
+                      <option>Select Type</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100">
+                      <i class="la la-filter"></i> Filter
+                    </button>
+                  </div>
+                </div>
+                
+                
+                <div class="table-responsive card-body">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Intitulé du Projet</th>
+                      <th scope="col">Description du Projet</th>
+                      <th scope="col">Durée Estimée</th>
+                      <th scope="col">Statut</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let demande of demandes; index as i">
+                      <th scope="row">{{ i + 1 }}</th>
+                      <td>{{ demande.intituleProjet | slice:0:30 }}</td>
+                      <td>{{ demande.descriptionProjet | slice:0:30 }}...</td>
+                      <td>{{ demande.dureeEstime }} mois</td>
+                      <td>
+                        <span class="status-badge"
+                              [ngClass]="{
+                                'status-orange': demande.statut?.id === 1,
+                                'status-blue': demande.statut?.id === 4,
+                                'status-green': demande.statut?.id === 2,
+                                'status-red': demande.statut?.id === 3
+                              }">
+                          {{ demande.statut?.nomStatut }}
+                        </span>
+                      </td>
+                      <td>
+
+                        <span [ngbTooltip]="'Modification non autorisée'" triggers="hover" [autoClose]="'outside'"
+                        *ngIf="demande.statut?.id === 2 || demande.statut?.id === 3 || demande.statut?.id === 4">
+                    <a 
+                       class="editbut edit mr-1 mrless disabled-button">
+                      <i class="la la-pencil"></i>
+                    </a>
+                  </span>
+                  
+                  <a *ngIf="!(demande.statut?.id === 2 || demande.statut?.id === 3 || demande.statut?.id === 4)"
+                     [routerLink]="['/demande/update', demande.id]" 
+                     class="editbut edit mr-1 mrless">
+                    <i class="la la-pencil"></i>
+                  </a>
+
+                   <a [routerLink]="['/demande/detail', demande.id]"  class="primary view mr-1 mrless">
+                    <i class="la la-eye"></i>
+                  </a>
+
+                  <a class="danger delete mr-1 mrless"
+                  (click)=" openDeleteConfirmationModal(demande.id)"
+                  [ngbTooltip]="(demande.statut?.id === 2 || demande.statut?.id === 3 || demande.statut?.id === 4) ? 'Suppression non autorisée' : null"
+                  triggers="hover"
+                  [autoClose]="'outside'">
+                 <i class="la la-trash-o"></i>
+               </a>
+               
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+              <div class="text-center mb-3">
+                <nav aria-label="Page navigation">
+                  <ul
+                    class="pagination justify-content-center pagination-separate pagination-round pagination-flat">
+                    <ngb-pagination [collectionSize]="50" aria-label="Default pagination">
+                    </ngb-pagination>
+                  </ul>
+                </nav>
+              </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #deleteModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Are you sure?</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>You won’t be able to revert this!</p>
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-danger" (click)="modal.close('delete')">Yes, delete it!</button>
+        <button class="btn btn-secondary" (click)="modal.dismiss()">No, cancel!</button>
+      </div>
+      <hr>
+    </div>
+  </ng-template>
